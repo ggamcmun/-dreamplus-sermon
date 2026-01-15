@@ -2,6 +2,9 @@ import localFont from 'next/font/local'
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
+/* ===============================
+   메타데이터
+================================ */
 export const metadata: Metadata = {
   title: 'DREAMPLUS',
   description: '드림플러스 설교노트',
@@ -13,6 +16,9 @@ export const metadata: Metadata = {
   },
 }
 
+/* ===============================
+   뷰포트
+================================ */
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
@@ -21,6 +27,9 @@ export const viewport: Viewport = {
   themeColor: '#fdfbf7',
 }
 
+/* ===============================
+   Pretendard 폰트
+================================ */
 const pretendard = localFont({
   src: [
     {
@@ -41,6 +50,9 @@ const pretendard = localFont({
   ],
 })
 
+/* ===============================
+   Root Layout
+================================ */
 export default function RootLayout({
   children,
 }: {
@@ -52,7 +64,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/icon-192.png" />
       </head>
-      <body className="min-h-screen bg-church-cream">
+      <body className={`${pretendard.className} min-h-screen bg-church-cream`}>
         {children}
       </body>
     </html>
