@@ -271,9 +271,9 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
               </p>
             )}
 
-            <p className="text-gray-800 leading-relaxed">
-              {currentSection.summary}
-            </p>
+            <p className="text-primary-700 leading-relaxed whitespace-pre-line">
+  {currentSection.summary}
+</p>
           </div>
 
           {/* 메모 */}
