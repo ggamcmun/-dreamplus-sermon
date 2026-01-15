@@ -10,28 +10,28 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          50: '#faf8f5',
-          100: '#f5f0e8',
-          200: '#e8dfd0',
-          300: '#d4c4a8',
-          400: '#bda57e',
-          500: '#a68a5b',
-          600: '#8f7349',
-          700: '#755d3c',
-          800: '#604d34',
-          900: '#50412d',
+          50: '#f7f7f7',
+          100: '#ededed',
+          200: '#e0e0e0',
+          300: '#cfcfcf',
+          400: '#b1b1b1',
+          500: '#8e8e8e',
+          600: '#6b6b6b',
+          700: '#4b4b4b',
+          800: '#2f2f2f',
+          900: '#1a1a1a',
         },
         church: {
-          cream: '#fdfbf7',
-          gold: '#c9a227',
-          brown: '#5c4033',
-          sage: '#9caf88',
-          navy: '#000000',
-        }
+          cream: '#ffffff',   // 배경 → 흰색
+          gold: '#000000',    // 포인트 → 검정
+          brown: '#000000',   // 본문 텍스트 → 검정
+          sage: '#9a9a9a',    // 보조 텍스트 → 연회색
+          navy: '#000000',    // 헤더 → 검정
+        },
       },
       fontFamily: {
-        serif: ['Georgia', 'Cambria', '"Times New Roman"', 'Times', 'serif'],
-        sans: ['"Noto Sans KR"', 'sans-serif'],
+        serif: ['"PretendardStd"', 'serif'],
+        sans: ['"PretendardStd"', 'sans-serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-out',
@@ -56,4 +56,5 @@ const config: Config = {
   },
   plugins: [],
 }
+
 export default config
