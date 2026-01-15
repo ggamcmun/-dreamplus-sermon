@@ -2,13 +2,13 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: '설교노트 | 교회 디지털 주보',
-  description: '예배 중 설교 메모를 기록하고 저장하세요',
+  title: 'DREAMPLUS',
+  description: '드림플러스 설교노트',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: '설교노트',
+    title: 'DREAMPLUS',
   },
 }
 
