@@ -33,17 +33,17 @@ export const viewport: Viewport = {
 const pretendard = localFont({
   src: [
     {
-      path: './fonts/Pretendard-Regular.woff2',
+      path: './fonts/PretendardStd-Regular.woff2',
       weight: '400',
       style: 'normal',
     },
     {
-      path: './fonts/Pretendard-Medium.woff2',
+      path: './fonts/PretendardStd-Medium.woff2',
       weight: '500',
       style: 'normal',
     },
     {
-      path: './fonts/Pretendard-Bold.woff2',
+      path: './fonts/PretendardStd-Bold.woff2',
       weight: '700',
       style: 'normal',
     },
