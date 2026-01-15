@@ -1,4 +1,3 @@
-import localFont from 'next/font/local'
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
@@ -28,29 +27,6 @@ export const viewport: Viewport = {
 }
 
 /* ===============================
-   Pretendard 폰트
-================================ */
-const pretendard = localFont({
-  src: [
-    {
-      path: './fonts/PretendardStd-Regular.woff2',
-      weight: '400',
-      style: 'normal',
-    },
-    {
-      path: './fonts/PretendardStd-Medium.woff2',
-      weight: '500',
-      style: 'normal',
-    },
-    {
-      path: './fonts/PretendardStd-Bold.woff2',
-      weight: '700',
-      style: 'normal',
-    },
-  ],
-})
-
-/* ===============================
    Root Layout
 ================================ */
 export default function RootLayout({
@@ -64,7 +40,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/icon-192.png" />
       </head>
-      <body className={`${pretendard.className} min-h-screen bg-church-cream`}>
+     <body className="min-h-screen bg-church-cream">
         {children}
       </body>
     </html>
