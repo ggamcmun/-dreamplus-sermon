@@ -3,9 +3,8 @@ import { NextResponse, type NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // ✅ 이 경로들은 검사하지 않는다 (무한 튕김 방지)
+  // ✅ 정적 파일/내부 경로는 건드리지 않기
   if (
-    pathname.startsWith("/login") ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
     pathname === "/favicon.ico"
@@ -13,14 +12,25 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // ✅ /admin 은 관리자 페이지
-  if (pathname.startsWith("/admin")) {
-    const isAdmin = request.cookies.get("admin")?.value === "true";
+  // ✅ /admin 로그인/권한없음 페이지는 통과 (여기 막으면 루프남)
+  if (
+    pathname === "/admin/login" ||
+    pathname.startsWith("/admin/login/") ||
+    pathname === "/admin/unauthorized" ||
+    pathname.startsWith("/admin/unauthorized/")
+  ) {
+    return NextResponse.next();
+  }
 
-    // 관리자 아니면 로그인 페이지로 보냄
-    if (!isAdmin) {
+  // ✅ /admin 접근 시 로그인 안 했으면 /admin/login 으로 보내기
+  if (pathname.startsWith("/admin")) {
+    const hasSupabaseCookie = request.cookies
+      .getAll()
+      .some((c) => c.name.startsWith("sb-"));
+
+    if (!hasSupabaseCookie) {
       const url = request.nextUrl.clone();
-      url.pathname = "/login";
+      url.pathname = "/admin/login";
       return NextResponse.redirect(url);
     }
   }
