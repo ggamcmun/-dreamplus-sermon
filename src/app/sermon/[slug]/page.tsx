@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import SermonNoteClient from './SermonNoteClient'
 import type { Sermon, Section, Note } from '@/types'
 
+export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
 interface PageProps {
@@ -16,16 +17,20 @@ async function getSermonBySlug(slug: string): Promise<{
   userId: string | null
 }> {
   const supabase = createClient()
-  
+
+  const decodedSlug = decodeURIComponent(slug)
+
   // 현재 사용자 확인
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   const userId = user?.id || null
 
   // 설교 조회
   const { data: sermon, error: sermonError } = await supabase
     .from('sermons')
     .select('*')
-    .eq('slug', slug)
+    .eq('slug', decodedSlug)
     .eq('is_published', true)
     .single()
 
@@ -48,7 +53,7 @@ async function getSermonBySlug(slug: string): Promise<{
   // 사용자의 메모 조회 (로그인한 경우만)
   let notes: Note[] = []
   if (userId && sections && sections.length > 0) {
-    const sectionIds = sections.map(s => s.id)
+    const sectionIds = sections.map((s) => s.id)
     const { data: notesData, error: notesError } = await supabase
       .from('notes')
       .select('*')
@@ -64,16 +69,18 @@ async function getSermonBySlug(slug: string): Promise<{
     sermon,
     sections: sections || [],
     notes,
-    userId
+    userId,
   }
 }
 
 export async function generateMetadata({ params }: PageProps) {
   const supabase = createClient()
+  const decodedSlug = decodeURIComponent(params.slug)
+
   const { data: sermon } = await supabase
     .from('sermons')
     .select('title, date, preacher')
-    .eq('slug', params.slug)
+    .eq('slug', decodedSlug)
     .single()
 
   if (!sermon) {
