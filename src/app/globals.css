@@ -86,8 +86,8 @@ body {
 }
 
 .hero-black .subtitle {
-  margin-top: 0.1rem;
-  font-size: 0.9rem;
+  margin-top: 0;
+  font-size: 1rem;
   color: var(--color-light-gray);
   letter-spacing: 0.12em;
 }
