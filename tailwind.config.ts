@@ -26,7 +26,7 @@ const config: Config = {
           gold: '#c9a227',
           brown: '#5c4033',
           sage: '#9caf88',
-          navy: '#2c3e50',
+          navy: '#000000',
         }
       },
       fontFamily: {
