@@ -283,3 +283,29 @@ a {
 .toggle-switch.active::after {
   transform: translateX(22px);
 }
+
+@font-face {
+  font-family: "PretendardStd";
+  src: url("/fonts/PretendardStd-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PretendardStd";
+  src: url("/fonts/PretendardStd-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PretendardStd";
+  src: url("/fonts/PretendardStd-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+html, body {
+  font-family: "PretendardStd", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+}
