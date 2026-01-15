@@ -33,10 +33,10 @@ export default async function HomePage() {
         <div className="max-w-2xl mx-auto px-4 py-6">
           <div className="text-center">
             <h1 className="font-sermon text-2xl font-semibold text-church-brown">
-              ✝️ 설교노트
+              DREAMPLUS
             </h1>
             <p className="mt-1 text-sm text-primary-600">
-              말씀을 마음에 새기세요
+              나만의 설교 노트
             </p>
           </div>
         </div>
@@ -104,7 +104,7 @@ export default async function HomePage() {
       <footer className="border-t border-primary-200 mt-auto">
         <div className="max-w-2xl mx-auto px-4 py-6 text-center">
           <p className="text-xs text-primary-400">
-            © 설교노트 · 말씀으로 하루를 시작하세요
+            © DREAMPLUS · 서울드림교회
           </p>
         </div>
       </footer>
