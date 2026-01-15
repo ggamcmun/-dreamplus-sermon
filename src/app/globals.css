@@ -86,10 +86,10 @@ body {
 }
 
 .hero-black .subtitle {
-  margin-top: -2rem;
-  font-size: 1rem;
+  margin-top: -0.5rem;
+  font-size: 1.5rem;
   color: var(--color-light-gray);
-  letter-spacing: 0.12em;
+  letter-spacing: 1em;
 }
 
 /* ===============================
