@@ -33,7 +33,7 @@ export default async function AdminLayout({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-6">
               <Link href="/admin" className="font-semibold text-lg">
-                ⚙️ 설교노트 관리
+                ⚙️ DREAMPLUS 설교노트 관리
               </Link>
               <nav className="hidden sm:flex items-center gap-4 text-sm">
                 <Link href="/admin/sermons" className="text-white/80 hover:text-white">
