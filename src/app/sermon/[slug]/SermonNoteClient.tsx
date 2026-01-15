@@ -20,11 +20,10 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle')
   const [showLoginPrompt, setShowLoginPrompt] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(!!userId)
-  
+
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const supabase = createClient()
 
-  // 초기 메모 로드
   useEffect(() => {
     const noteMap: Record<string, string> = {}
     initialNotes.forEach(note => {
@@ -33,24 +32,22 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
     setNotes(noteMap)
   }, [initialNotes])
 
-  // 인증 상태 감시
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         setIsLoggedIn(!!session?.user)
-        
+
         if (event === 'SIGNED_IN' && session?.user) {
           setShowLoginPrompt(false)
-          // 로그인 후 기존 메모 불러오기
           await loadUserNotes(session.user.id)
         }
       }
     )
 
     return () => subscription.unsubscribe()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sections])
 
-  // 사용자 메모 로드
   const loadUserNotes = async (userId: string) => {
     if (sections.length === 0) return
 
@@ -70,7 +67,6 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
     }
   }
 
-  // 메모 저장
   const saveNote = useCallback(async (sectionId: string, content: string) => {
     if (!isLoggedIn) {
       setShowLoginPrompt(true)
@@ -86,7 +82,6 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
         return
       }
 
-      // upsert로 저장 (있으면 업데이트, 없으면 생성)
       const { error } = await supabase
         .from('notes')
         .upsert(
@@ -106,7 +101,6 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
         setSaveStatus('error')
       } else {
         setSaveStatus('saved')
-        // 3초 후 상태 초기화
         setTimeout(() => setSaveStatus('idle'), 3000)
       }
     } catch (err) {
@@ -115,73 +109,59 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
     }
   }, [isLoggedIn, supabase])
 
-  // 메모 변경 핸들러 (debounce 적용)
   const handleNoteChange = (sectionId: string, content: string) => {
-    // 로컬 상태 즉시 업데이트
     setNotes(prev => ({ ...prev, [sectionId]: content }))
 
-    // 로그인 안 된 경우 프롬프트 표시
     if (!isLoggedIn) {
       setShowLoginPrompt(true)
       return
     }
 
-    // 기존 타이머 취소
     if (saveTimeoutRef.current) {
       clearTimeout(saveTimeoutRef.current)
     }
 
-    // 800ms 후 저장
     saveTimeoutRef.current = setTimeout(() => {
       saveNote(sectionId, content)
     }, 800)
   }
 
-  // 구간 이동
   const goToPrevious = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1)
-    }
+    if (currentIndex > 0) setCurrentIndex(currentIndex - 1)
   }
 
   const goToNext = () => {
-    if (currentIndex < sections.length - 1) {
-      setCurrentIndex(currentIndex + 1)
-    }
+    if (currentIndex < sections.length - 1) setCurrentIndex(currentIndex + 1)
   }
 
-  // 키보드 네비게이션
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLTextAreaElement) return
-      
-      if (e.key === 'ArrowLeft') {
-        goToPrevious()
-      } else if (e.key === 'ArrowRight') {
-        goToNext()
-      }
+      if (e.key === 'ArrowLeft') goToPrevious()
+      else if (e.key === 'ArrowRight') goToNext()
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex, sections.length])
 
   const currentSection = sections[currentIndex]
 
   if (sections.length === 0) {
     return (
-      <div className="min-h-screen bg-church-cream flex items-center justify-center p-4">
+      <div className="min-h-screen bg-white flex items-center justify-center p-4">
         <div className="text-center">
           <div className="text-5xl mb-4">📝</div>
-          <h2 className="font-sermon text-xl text-church-brown mb-2">
+          <h2 className="text-xl font-semibold text-black mb-2">
             아직 설교 구간이 준비되지 않았습니다
           </h2>
-          <p className="text-primary-600 mb-6">
+          <p className="text-gray-500 mb-6">
             곧 준비될 예정입니다
           </p>
-          <Link 
+          <Link
             href="/"
-            className="inline-flex items-center gap-2 text-church-gold hover:underline"
+            className="inline-flex items-center gap-2 text-black hover:underline"
           >
             ← 설교 목록으로 돌아가기
           </Link>
@@ -191,31 +171,32 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
   }
 
   return (
-    <div className="min-h-screen bg-church-cream flex flex-col">
-      {/* 헤더 */}
-      <header className="bg-white border-b border-primary-200 sticky top-0 z-10">
+    <div className="min-h-screen bg-white flex flex-col">
+      {/* 헤더 (검정 + 흰글씨) */}
+      <header className="bg-black text-white sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
-            <Link 
-              href="/" 
-              className="text-primary-400 hover:text-church-brown transition-colors"
+            <Link
+              href="/"
+              className="text-gray-300 hover:text-white transition-colors"
+              aria-label="뒤로가기"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </Link>
-            
+
             <div className="text-center flex-1 mx-4">
-              <h1 className="font-sermon text-base font-medium text-church-brown truncate">
+              <h1 className="text-base font-medium text-white truncate">
                 {sermon.title}
               </h1>
-              <p className="text-xs text-primary-500">
+              <p className="text-xs text-gray-400">
                 {formatDateWithDay(sermon.date)}
               </p>
             </div>
 
             {/* 저장 상태 표시 */}
-            <div className="w-20 text-right">
+            <div className="w-24 text-right">
               {saveStatus === 'saving' && (
                 <span className="save-indicator saving">
                   <span className="spinner" />
@@ -235,14 +216,14 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
             </div>
           </div>
 
-          {/* 진행률 표시 */}
+          {/* 진행률 */}
           <div className="mt-3 flex items-center gap-2">
-            <span className="text-xs text-primary-500 font-medium">
+            <span className="text-xs text-gray-400 font-medium">
               {currentIndex + 1} / {sections.length}
             </span>
-            <div className="flex-1 h-1 bg-primary-200 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-church-gold transition-all duration-300"
+            <div className="flex-1 h-1 bg-gray-700 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-white transition-all duration-300"
                 style={{ width: `${((currentIndex + 1) / sections.length) * 100}%` }}
               />
             </div>
@@ -250,21 +231,21 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
         </div>
       </header>
 
-      {/* 메인 콘텐츠 */}
+      {/* 메인 */}
       <main className="flex-1 max-w-2xl mx-auto w-full px-4 py-4">
-        {/* 구간 네비게이션 (미니맵) */}
+        {/* 미니맵 */}
         <div className="flex gap-1.5 mb-4 overflow-x-auto pb-2 scrollbar-hide">
           {sections.map((section, index) => (
             <button
               key={section.id}
               onClick={() => setCurrentIndex(index)}
               className={cn(
-                'flex-shrink-0 w-8 h-8 rounded-full text-xs font-medium transition-all',
+                'flex-shrink-0 w-8 h-8 rounded-full text-xs font-medium transition-all border',
                 index === currentIndex
-                  ? 'bg-church-gold text-white scale-110'
+                  ? 'bg-black text-white border-black scale-110'
                   : notes[section.id]
-                    ? 'bg-church-sage/30 text-church-brown'
-                    : 'bg-primary-200 text-primary-500 hover:bg-primary-300'
+                    ? 'bg-gray-200 text-black border-gray-300 hover:bg-gray-300'
+                    : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-100'
               )}
             >
               {index + 1}
@@ -272,44 +253,45 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
           ))}
         </div>
 
-        {/* 현재 구간 */}
-        <div className="section-card active animate-fade-in" key={currentSection.id}>
+        {/* 구간 카드 */}
+        <div className="rounded-2xl border border-gray-200 bg-white shadow-sm p-5 animate-fade-in" key={currentSection.id}>
           <div className="mb-4">
             <div className="flex items-center gap-2 mb-2">
-              <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-church-gold text-white text-sm font-bold">
+              <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-black text-white text-sm font-bold">
                 {currentIndex + 1}
               </span>
-              <h2 className="font-sermon text-lg font-semibold text-church-brown">
+              <h2 className="text-lg font-semibold text-black">
                 {currentSection.title}
               </h2>
             </div>
-            
+
             {currentSection.key_verses && (
-              <p className="text-sm text-church-gold font-medium mb-2">
+              <p className="text-sm text-gray-700 font-medium mb-2">
                 📖 {currentSection.key_verses}
               </p>
             )}
-            
-            <p className="text-primary-700 leading-relaxed">
+
+            <p className="text-gray-800 leading-relaxed">
               {currentSection.summary}
             </p>
           </div>
 
-          {/* 메모 입력 영역 */}
+          {/* 메모 */}
           <div className="mt-4">
-            <label className="block text-sm font-medium text-primary-600 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               ✍️ 나의 메모
             </label>
+
             <textarea
-              className="note-textarea w-full"
+              className="w-full rounded-xl border border-gray-300 bg-white p-4 leading-relaxed focus:outline-none focus:ring-2 focus:ring-black/20 focus:border-black"
               placeholder="이 구간에서 느낀 점, 적용할 점을 자유롭게 적어보세요..."
               value={notes[currentSection.id] || ''}
               onChange={(e) => handleNoteChange(currentSection.id, e.target.value)}
               rows={5}
             />
-            
+
             {!isLoggedIn && (
-              <p className="mt-2 text-xs text-primary-500 flex items-center gap-1">
+              <p className="mt-2 text-xs text-gray-500 flex items-center gap-1">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -319,16 +301,16 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
           </div>
         </div>
 
-        {/* 이전/다음 버튼 */}
+        {/* 이전/다음 */}
         <div className="flex gap-3 mt-4">
           <button
             onClick={goToPrevious}
             disabled={currentIndex === 0}
             className={cn(
-              'flex-1 py-3 px-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2',
+              'flex-1 py-3 px-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2 border',
               currentIndex === 0
-                ? 'bg-primary-100 text-primary-400 cursor-not-allowed'
-                : 'bg-white border border-primary-300 text-church-brown hover:border-church-gold hover:text-church-gold'
+                ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                : 'bg-white text-black border-gray-300 hover:border-black'
             )}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -336,15 +318,15 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
             </svg>
             이전
           </button>
-          
+
           <button
             onClick={goToNext}
             disabled={currentIndex === sections.length - 1}
             className={cn(
-              'flex-1 py-3 px-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2',
+              'flex-1 py-3 px-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2 border',
               currentIndex === sections.length - 1
-                ? 'bg-primary-100 text-primary-400 cursor-not-allowed'
-                : 'bg-church-gold text-white hover:bg-church-gold/90'
+                ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                : 'bg-black text-white border-black hover:bg-gray-900'
             )}
           >
             다음
@@ -355,18 +337,17 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
         </div>
       </main>
 
-      {/* 하단 설교자 정보 */}
+      {/* 푸터 */}
       {sermon.preacher && (
-        <footer className="border-t border-primary-200 bg-white/50">
+        <footer className="border-t border-gray-200 bg-white">
           <div className="max-w-2xl mx-auto px-4 py-3 text-center">
-            <p className="text-sm text-primary-600">
+            <p className="text-sm text-gray-600">
               {sermon.preacher} 목사 · {formatDateWithDay(sermon.date)}
             </p>
           </div>
         </footer>
       )}
 
-      {/* 로그인 프롬프트 모달 */}
       {showLoginPrompt && (
         <LoginPrompt onClose={() => setShowLoginPrompt(false)} />
       )}
