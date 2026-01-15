@@ -279,15 +279,15 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
           {/* 메모 */}
           <div className="mt-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              ✍️ 나의 메모
+              ✍🏻 나의 메모
             </label>
 
             <textarea
               className="w-full rounded-xl border border-gray-300 bg-white p-4 leading-relaxed focus:outline-none focus:ring-2 focus:ring-black/20 focus:border-black"
-              placeholder="이 구간에서 느낀 점, 적용할 점을 자유롭게 적어보세요..."
+              placeholder="설교를 들으며 기억하고 싶은 내용들을 적어보세요"
               value={notes[currentSection.id] || ''}
               onChange={(e) => handleNoteChange(currentSection.id, e.target.value)}
-              rows={5}
+              rows={10}
             />
 
             {!isLoggedIn && (
