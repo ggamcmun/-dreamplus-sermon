@@ -1,6 +1,3 @@
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
-
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import SermonNoteClient from './SermonNoteClient'
