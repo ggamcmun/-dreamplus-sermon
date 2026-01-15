@@ -6,14 +6,15 @@
 @tailwind utilities;
 
 /* ===============================
-   브랜드 컬러 변수
+   브랜드 컬러 변수 (무채색)
 ================================ */
 :root {
-  --color-cream: #fdfbf7;
-  --color-gold: #c9a227;
-  --color-brown: #5c4033;
-  --color-sage: #9caf88;
-  --color-navy: #2c3e50;
+  --color-black: #000000;
+  --color-dark-gray: #1a1a1a;
+  --color-gray: #2e2e2e;
+  --color-light-gray: #b3b3b3;
+  --color-border: #e5e5e5;
+  --color-white: #ffffff;
 }
 
 /* ===============================
@@ -55,16 +56,40 @@ html {
 }
 
 /* ===============================
-   ⭐️ 전체 기본 폰트 (여기가 핵심)
+   ⭐️ 전체 기본 스타일 (핵심)
 ================================ */
 body {
-  font-family: "PretendardStd", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
-  background-color: var(--color-cream);
-  color: var(--color-brown);
+  font-family: "PretendardStd", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Apple SD Gothic Neo", Arial, sans-serif;
+  background-color: var(--color-white);
+  color: var(--color-black);
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===============================
+   DREAMPLUS 히어로 헤더
+   (검정 배경 + 흰 글씨)
+================================ */
+.hero-black {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.hero-black .title {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.hero-black .subtitle {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--color-light-gray);
+  letter-spacing: 0.12em;
 }
 
 /* ===============================
@@ -75,7 +100,7 @@ textarea,
 select,
 button {
   font-family: inherit;
-  font-size: 16px; /* iOS 자동 줌 방지 */
+  font-size: 16px;
 }
 
 textarea {
@@ -103,12 +128,12 @@ button:active {
    포커스 스타일
 ================================ */
 :focus-visible {
-  outline: 2px solid var(--color-gold);
+  outline: 2px solid var(--color-black);
   outline-offset: 2px;
 }
 
 /* ===============================
-   스크롤바
+   스크롤바 (미니멀)
 ================================ */
 ::-webkit-scrollbar {
   width: 6px;
@@ -116,12 +141,8 @@ button:active {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d4c4a8;
+  background: var(--color-light-gray);
   border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #bda57e;
 }
 
 /* ===============================
@@ -157,15 +178,14 @@ button:active {
 .note-textarea {
   min-height: 120px;
   padding: 1rem;
-  border: 2px solid #e8dfd0;
+  border: 2px solid var(--color-border);
   border-radius: 12px;
-  background: white;
+  background: var(--color-white);
   line-height: 1.8;
 }
 
 .note-textarea:focus {
-  border-color: var(--color-gold);
-  box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.1);
+  border-color: var(--color-black);
   outline: none;
 }
 
@@ -173,16 +193,14 @@ button:active {
    구간 카드
 ================================ */
 .section-card {
-  background: white;
+  background: var(--color-white);
   border-radius: 16px;
   padding: 1.25rem;
-  border: 1px solid #e8dfd0;
-  box-shadow: 0 2px 8px rgba(92, 64, 51, 0.06);
+  border: 1px solid var(--color-border);
 }
 
 .section-card.active {
-  border-color: var(--color-gold);
-  box-shadow: 0 4px 20px rgba(201, 162, 39, 0.15);
+  border-color: var(--color-black);
 }
 
 /* ===============================
