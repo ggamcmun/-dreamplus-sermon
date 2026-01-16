@@ -66,15 +66,23 @@ export default function SermonActions({ sermon, appUrl }: Props) {
         </svg>
       </button>
 
-      <button
+ <button
+  type="button"
   onClick={togglePublish}
   disabled={isUpdating}
-  className={`toggle-switch ${sermon.is_published ? 'active' : ''}`}
   title={sermon.is_published ? '비공개로 전환' : '공개로 전환'}
+  className={[
+    'relative inline-flex h-7 w-12 items-center rounded-full transition-colors',
+    sermon.is_published ? 'bg-black' : 'bg-gray-300',
+    isUpdating ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer',
+  ].join(' ')}
 >
-  <span className="sr-only">
-    {sermon.is_published ? '비공개' : '공개'}
-  </span>
+  <span
+    className={[
+      'inline-block h-5 w-5 transform rounded-full bg-white transition-transform',
+      sermon.is_published ? 'translate-x-6' : 'translate-x-1',
+    ].join(' ')}
+  />
 </button>
 
       <Link
