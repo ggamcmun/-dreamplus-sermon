@@ -67,11 +67,15 @@ export default function SermonActions({ sermon, appUrl }: Props) {
       </button>
 
       <button
-        onClick={togglePublish}
-        disabled={isUpdating}
-        className={`toggle-switch ${sermon.is_published ? 'active' : ''}`}
-        title={sermon.is_published ? '비공개로 전환' : '공개로 전환'}
-      />
+  onClick={togglePublish}
+  disabled={isUpdating}
+  className={`toggle-switch ${sermon.is_published ? 'active' : ''}`}
+  title={sermon.is_published ? '비공개로 전환' : '공개로 전환'}
+>
+  <span className="sr-only">
+    {sermon.is_published ? '비공개' : '공개'}
+  </span>
+</button>
 
       <Link
         href={`/admin/sermons/${sermon.id}/edit`}
