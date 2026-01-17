@@ -9,12 +9,10 @@
    브랜드 컬러 변수 (무채색)
 ================================ */
 :root {
-  --color-black: #000000;
-  --color-dark-gray: #1a1a1a;
-  --color-gray: #2e2e2e;
-  --color-light-gray: #b3b3b3;
-  --color-border: #e5e5e5;
-  --color-white: #ffffff;
+  --color-bg-main: #0A8F82;      /* 청록 배경 */
+  --color-text-main: #F6B7B4;    /* 핑크 텍스트 */
+  --color-text-sub: rgba(246, 183, 180, 0.75);
+  --color-border: rgba(246, 183, 180, 0.35);
 }
 
 /* ===============================
