@@ -73,9 +73,9 @@ body {
    (검정 배경 + 흰 글씨)
 ================================ */
 .hero-black {
-  background-color: var(--color-black);
-  color: var(--color-white);
-  padding: 1.75rem 1rem;
+  background-color: var(--color-bg-main);   /* 청록 */
+  color: var(--color-text-main);            /* 핑크 */
+  padding: 1.25rem 1rem;                    /* 상단바 두께 살짝 줄임 */
   text-align: center;
 }
 
@@ -86,10 +86,10 @@ body {
 }
 
 .hero-black .subtitle {
-  margin-top: -0.5rem;
-  font-size: 1rem;
-  color: var(--color-light-gray);
-  letter-spacing: 0.2em;
+  margin-top: 0.25rem;                      /* 줄간격 정상화 */
+  font-size: 0.95rem;
+  color: rgba(246, 183, 180, 0.85);          /* 핑크 톤다운 */
+  letter-spacing: 0.14em;
 }
 
 /* ===============================
