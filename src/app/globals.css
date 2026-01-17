@@ -1,37 +1,196 @@
 /* ===============================
-   컬러 변수 (없으면 반드시 필요)
+  Tailwind
+================================ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===============================
+  브랜드 컬러 변수 (청록 배경 + 톤다운 핑크)
+  ⚠️ 중복 변수 제거/정리 완료
 ================================ */
 :root {
-  --color-bg-main: #0b8f83;     /* 청록 배경 */
-  --color-text-main: #f6b7b4;   /* 메인 핑크 */
-  --color-text-sub: rgba(246, 183, 180, 0.8);
+  --color-black: #000000;
+  --color-dark-gray: #1a1a1a;
+  --color-gray: #2e2e2e;
+  --color-light-gray: #b3b3b3;
+  --color-white: #ffffff;
+
+  /* ✅ 너가 원하는 톤 */
+  --color-bg-main: #0a8f82;                 /* 청록 */
+  --color-text-main: #f6b7b4;               /* 핑크 */
+  --color-text-sub: rgba(246, 183, 180, 0.78);
+
+  /* ✅ 테두리/라인용 (핑크 계열) */
+  --color-border: rgba(246, 183, 180, 0.35);
 }
 
 /* ===============================
-   상단 HERO 바
+  PretendardStd 폰트 선언
+  (public/fonts 폴더 기준)
+================================ */
+@font-face {
+  font-family: "PretendardStd";
+  src: url("/fonts/PretendardStd-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PretendardStd";
+  src: url("/fonts/PretendardStd-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PretendardStd";
+  src: url("/fonts/PretendardStd-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ===============================
+  기본 리셋
+================================ */
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ===============================
+  ⭐️ 전체 기본 스타일 (배경/글자 톤 적용)
+  ✅ 여기서 “전체 배경 = 청록 / 전체 글자 = 핑크”로 강제됨
+================================ */
+body {
+  font-family: "PretendardStd", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Apple SD Gothic Neo", Arial, sans-serif;
+  background-color: var(--color-bg-main);
+  color: var(--color-text-main);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===============================
+  DREAMPLUS 상단바 (청록 배경 + 핑크 글씨)
+  ✅ 네가 원한 “바 색”은 여기서 결정됨
 ================================ */
 .hero-black {
   background-color: var(--color-bg-main);
   color: var(--color-text-main);
-  padding: 1rem 1rem;          /* 🔽 상단바 두께 줄임 */
+  padding: 1.25rem 1rem;     /* 바 두께 */
   text-align: center;
 }
 
-/* DREAMPLUS */
 .hero-black .title {
-  font-size: 1.8rem;            /* 살짝 컴팩트 */
+  font-size: 2rem;
   font-weight: 700;
-  letter-spacing: -0.015em;
-  line-height: 1.15;            /* 🔽 줄간격 줄임 */
-  margin: 0;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.15rem;    /* ✅ 제목-부제 간격 줄임 */
 }
 
-/* 나만의 설교노트 */
 .hero-black .subtitle {
-  margin-top: 0.2rem;           /* 🔽 간격 최소화 */
-  font-size: 0.9rem;
-  font-weight: 500;
+  margin-top: 0;
+  font-size: 0.95rem;
   color: var(--color-text-sub);
-  letter-spacing: 0.12em;
-  line-height: 1.2;
+  letter-spacing: 0.14em;
+}
+
+/* ===============================
+  입력 요소
+================================ */
+input, textarea, select, button {
+  font-family: inherit;
+  font-size: 16px;
+}
+textarea { resize: none; }
+
+/* ===============================
+  링크 / 버튼
+================================ */
+a { color: inherit; text-decoration: none; }
+
+button {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+button:active { transform: scale(0.98); }
+
+/* ===============================
+  포커스 스타일 (핑크 테두리)
+================================ */
+:focus-visible {
+  outline: 2px solid var(--color-text-main);
+  outline-offset: 2px;
+}
+
+/* ===============================
+  스크롤바 (핑크 톤)
+================================ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb {
+  background: var(--color-text-sub);
+  border-radius: 3px;
+}
+
+/* ===============================
+  애니메이션
+================================ */
+.animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+.animate-slide-up { animation: slideUp 0.4s ease-out forwards; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===============================
+  노트 입력 영역 (배경 흰색 유지 + 테두리 핑크)
+  ✅ “입력칸은 흰색, 전체 톤은 청록+핑크”로 예쁘게
+================================ */
+.note-textarea {
+  min-height: 180px;                  /* ✅ 입력칸 더 크게 */
+  padding: 1rem;
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-white);
+  color: var(--color-dark-gray);      /* ✅ 입력칸 글씨는 진한색(가독성) */
+  line-height: 1.8;
+}
+
+.note-textarea::placeholder {
+  color: rgba(26, 26, 26, 0.45);
+}
+
+.note-textarea:focus {
+  border-color: var(--color-text-main);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(246, 183, 180, 0.18);
+}
+
+/* ===============================
+  구간 카드 (흰 배경 + 핑크 라인)
+================================ */
+.section-card {
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 16px;
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+}
+
+.section-card.active {
+  border-color: var(--color-text-main);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.10);
+}
+
+/* ===============================
+  모바일 보정
+================================ */
+@media (max-width: 640px) {
+  body { font-size: 15px; }
 }
