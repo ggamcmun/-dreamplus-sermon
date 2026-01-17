@@ -28,7 +28,8 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[var(--color-text-main)]">
-      {/* 🔥 검정 헤더 (DREAMPLUS) */}
+
+      {/* 🔥 상단 헤더 */}
       <header className="hero-black">
         <div className="title">DREAMPLUS</div>
         <div className="subtitle">나만의 설교노트</div>
@@ -36,6 +37,14 @@ export default async function HomePage() {
 
       {/* 메인 콘텐츠 */}
       <main className="max-w-2xl mx-auto px-4 py-8 flex-1">
+
+        {/* 🔥 홈 배너 이미지 */}
+        <img
+          src="/home-banner.png"
+          alt="DREAMPLUS 배너"
+          className="w-full mb-8"
+        />
+
         {sermons.length === 0 ? (
           <div className="text-center py-20">
             <div className="text-5xl mb-4">📖</div>
@@ -48,7 +57,8 @@ export default async function HomePage() {
           </div>
         ) : (
           <div className="space-y-4">
-            {/* ✅ “최근 설교” 글씨를 청록으로 */}
+
+            {/* ✅ 최근 설교 텍스트 */}
             <h2 className="text-xs font-bold uppercase tracking-wider mb-4 text-[var(--color-bg-main)]">
               최근 설교
             </h2>
@@ -60,8 +70,8 @@ export default async function HomePage() {
                 className="block"
                 style={{ animationDelay: `${index * 50}ms` }}
               >
-                {/* ✅ 카드 배경 청록 / 글씨 핑크 */}
-                <article className="section-card animate-slide-up transition-colors bg-[var(--color-bg-main)] border border-[rgba(246,183,180,0.55)] hover:border-[var(--color-text-main)]">
+                {/* ✅ 설교 카드 (청록 배경 + 핑크 텍스트) */}
+                <article className="section-card animate-slide-up bg-[var(--color-bg-main)] border border-white transition-colors">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
                       <time className="text-xs font-medium text-[var(--color-text-main)]/85">
