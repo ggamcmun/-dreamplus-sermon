@@ -7,7 +7,7 @@ export const revalidate = 0
 
 async function getPublishedSermons(): Promise<Sermon[]> {
   const supabase = createClient()
-  
+
   const { data, error } = await supabase
     .from('sermons')
     .select('*')
@@ -27,33 +27,29 @@ export default async function HomePage() {
   const sermons = await getPublishedSermons()
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-
-      {/* ===============================
-          🔥 검정 헤더 (DREAMPLUS)
-      ================================ */}
+    <div className="min-h-screen flex flex-col bg-[var(--color-text-main)]">
+      {/* 🔥 검정 헤더 (DREAMPLUS) */}
       <header className="hero-black">
         <div className="title">DREAMPLUS</div>
         <div className="subtitle">나만의 설교노트</div>
       </header>
 
-      {/* ===============================
-          메인 콘텐츠
-      ================================ */}
+      {/* 메인 콘텐츠 */}
       <main className="max-w-2xl mx-auto px-4 py-8 flex-1">
         {sermons.length === 0 ? (
           <div className="text-center py-20">
             <div className="text-5xl mb-4">📖</div>
-            <h2 className="text-lg font-medium text-black mb-2">
+            <h2 className="text-lg font-medium text-[var(--color-bg-main)] mb-2">
               아직 공개된 설교가 없습니다
             </h2>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-[var(--color-bg-main)]/80">
               곧 새로운 설교가 등록될 예정입니다
             </p>
           </div>
         ) : (
           <div className="space-y-4">
-            <h2 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-4">
+            {/* ✅ “최근 설교” 글씨를 청록으로 */}
+            <h2 className="text-xs font-bold uppercase tracking-wider mb-4 text-[var(--color-bg-main)]">
               최근 설교
             </h2>
 
@@ -64,28 +60,32 @@ export default async function HomePage() {
                 className="block"
                 style={{ animationDelay: `${index * 50}ms` }}
               >
-                <article className="section-card animate-slide-up hover:border-black transition-colors">
+                {/* ✅ 카드 배경 청록 / 글씨 핑크 */}
+                <article className="section-card animate-slide-up transition-colors bg-[var(--color-bg-main)] border border-[rgba(246,183,180,0.55)] hover:border-[var(--color-text-main)]">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
-                      <time className="text-xs text-gray-400 font-medium">
+                      <time className="text-xs font-medium text-[var(--color-text-main)]/85">
                         {formatDateWithDay(sermon.date)}
                       </time>
-                      <h3 className="text-lg font-medium text-black mt-1">
+
+                      <h3 className="text-lg font-semibold mt-1 text-[var(--color-text-main)]">
                         {sermon.title}
                       </h3>
+
                       {sermon.preacher && (
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-sm mt-1 text-[var(--color-text-main)]/85">
                           {sermon.preacher} 목사
                         </p>
                       )}
+
                       {sermon.description && (
-                        <p className="text-sm text-gray-400 mt-2 line-clamp-2">
+                        <p className="text-sm mt-2 line-clamp-2 text-[var(--color-text-main)]/75">
                           {sermon.description}
                         </p>
                       )}
                     </div>
 
-                    <div className="flex-shrink-0 text-gray-400">
+                    <div className="flex-shrink-0 text-[var(--color-text-main)]/85">
                       <svg
                         className="w-5 h-5"
                         fill="none"
@@ -108,12 +108,10 @@ export default async function HomePage() {
         )}
       </main>
 
-      {/* ===============================
-          푸터
-      ================================ */}
-      <footer className="border-t border-gray-200">
+      {/* 푸터 */}
+      <footer className="border-t border-[rgba(10,143,130,0.25)]">
         <div className="max-w-2xl mx-auto px-4 py-6 text-center">
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-[var(--color-bg-main)]">
             © DREAMPLUS · 서울드림교회
           </p>
         </div>
