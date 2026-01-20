@@ -24,6 +24,10 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const supabase = createClient()
 
+  // ✅ 구간이 1개인지 여부
+  const isSingleSection = sections.length === 1
+
+  // 초기 메모 로드
   useEffect(() => {
     const noteMap: Record<string, string> = {}
     initialNotes.forEach(note => {
@@ -32,6 +36,7 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
     setNotes(noteMap)
   }, [initialNotes])
 
+  // 인증 상태 감시
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
@@ -48,6 +53,7 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sections])
 
+  // 사용자 메모 로드
   const loadUserNotes = async (userId: string) => {
     if (sections.length === 0) return
 
@@ -67,6 +73,7 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
     }
   }
 
+  // 메모 저장
   const saveNote = useCallback(async (sectionId: string, content: string) => {
     if (!isLoggedIn) {
       setShowLoginPrompt(true)
@@ -109,6 +116,16 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
     }
   }, [isLoggedIn, supabase])
 
+  // ✅ 수동 저장 버튼 핸들러
+  const handleManualSave = () => {
+    if (!sections.length) return
+    const sectionId = sections[currentIndex]?.id
+    if (!sectionId) return
+    const content = notes[sectionId] || ''
+    saveNote(sectionId, content)
+  }
+
+  // 메모 변경 핸들러 (debounce 적용)
   const handleNoteChange = (sectionId: string, content: string) => {
     setNotes(prev => ({ ...prev, [sectionId]: content }))
 
@@ -126,6 +143,7 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
     }, 800)
   }
 
+  // 구간 이동
   const goToPrevious = () => {
     if (currentIndex > 0) setCurrentIndex(currentIndex - 1)
   }
@@ -134,6 +152,7 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
     if (currentIndex < sections.length - 1) setCurrentIndex(currentIndex + 1)
   }
 
+  // 키보드 네비게이션
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLTextAreaElement) return
@@ -271,16 +290,27 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
               </p>
             )}
 
-            <p className="text-primary-700 leading-relaxed whitespace-pre-line">
-  {currentSection.summary}
-</p>
+            <p className="text-gray-800 leading-relaxed whitespace-pre-line">
+              {currentSection.summary}
+            </p>
           </div>
 
           {/* 메모 */}
           <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              ✍🏻 나의 메모
-            </label>
+            <div className="flex items-center justify-between gap-3 mb-2">
+              <label className="block text-sm font-medium text-gray-700">
+                ✍🏻 나의 메모
+              </label>
+
+              {/* ✅ 항상 보이는 작은 저장 버튼 */}
+              <button
+                type="button"
+                onClick={handleManualSave}
+                className="text-xs font-semibold px-3 py-2 rounded-lg border border-gray-300 bg-white text-black hover:border-black transition-colors"
+              >
+                💾 저장
+              </button>
+            </div>
 
             <textarea
               className="w-full rounded-xl border border-gray-300 bg-white p-4 leading-relaxed focus:outline-none focus:ring-2 focus:ring-black/20 focus:border-black"
@@ -301,39 +331,41 @@ export default function SermonNoteClient({ sermon, sections, initialNotes, userI
           </div>
         </div>
 
-        {/* 이전/다음 */}
+        {/* ✅ 하단 버튼 영역: 1개면 저장 / 여러개면 이전·다음 */}
         <div className="flex gap-3 mt-4">
-          <button
-            onClick={goToPrevious}
-            disabled={currentIndex === 0}
-            className={cn(
-              'flex-1 py-3 px-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2 border',
-              currentIndex === 0
-                ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-                : 'bg-white text-black border-gray-300 hover:border-black'
-            )}
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            이전
-          </button>
+          {/* 이전 버튼: 0이 아닐 때만 노출 */}
+          {currentIndex > 0 && (
+            <button
+              onClick={goToPrevious}
+              className="flex-1 py-3 px-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2 border bg-white text-black border-gray-300 hover:border-black"
+            >
+              이전
+            </button>
+          )}
 
-          <button
-            onClick={goToNext}
-            disabled={currentIndex === sections.length - 1}
-            className={cn(
-              'flex-1 py-3 px-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2 border',
-              currentIndex === sections.length - 1
-                ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-                : 'bg-black text-white border-black hover:bg-gray-900'
-            )}
-          >
-            다음
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+          {/* 구간 1개면 저장 버튼 */}
+          {isSingleSection ? (
+            <button
+              onClick={handleManualSave}
+              className="flex-1 py-3 px-4 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 bg-black text-white hover:bg-gray-900"
+            >
+              💾 저장하기
+            </button>
+          ) : (
+            /* 구간 여러 개면 다음 버튼 */
+            <button
+              onClick={goToNext}
+              disabled={currentIndex === sections.length - 1}
+              className={cn(
+                'flex-1 py-3 px-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2 border',
+                currentIndex === sections.length - 1
+                  ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                  : 'bg-black text-white border-black hover:bg-gray-900'
+              )}
+            >
+              다음
+            </button>
+          )}
         </div>
       </main>
 
