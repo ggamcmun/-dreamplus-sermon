@@ -29,6 +29,7 @@ export default function SermonNoteClient({
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle')
   const [showLoginPrompt, setShowLoginPrompt] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(!!userId)
+
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   /* ===============================
@@ -150,64 +151,86 @@ export default function SermonNoteClient({
   }
 
   const currentSection = sections[currentIndex]
-
   if (!currentSection) return null
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      {/* 헤더 */}
+      {/* ===============================
+          헤더
+      ================================ */}
       <header className="bg-black text-white sticky top-0 z-10">
-  <div className="max-w-2xl mx-auto px-4 py-3 relative flex items-center">
-    
-    {/* 왼쪽: 뒤로가기 */}
-    <Link
-      href="/"
-      className="text-gray-300 hover:text-white transition-colors z-10"
-      aria-label="뒤로가기"
-    >
-      ←
-    </Link>
+        <div className="max-w-2xl mx-auto px-4 py-3 relative flex items-center">
+          {/* 왼쪽 */}
+          <Link
+            href="/"
+            className="text-gray-300 hover:text-white transition-colors z-10"
+          >
+            ←
+          </Link>
 
-    {/* 가운데: 제목 (진짜 중앙 고정) */}
-   <div className="absolute left-1/2 -translate-x-1/2 text-center w-[70%]">
-  <h1 className="text-sm font-medium text-white leading-tight whitespace-normal break-words">
-    {sermon.title}
-  </h1>
-  <p className="text-xs text-gray-400 mt-0.5">
-    {formatDateWithDay(sermon.date)}
-  </p>
-</div>
+          {/* 가운데 제목 */}
+          <div className="absolute left-1/2 -translate-x-1/2 text-center w-[72%]">
+            <h1 className="text-sm font-medium leading-snug whitespace-normal break-words">
+              {sermon.title}
+            </h1>
+            <p className="text-xs text-gray-400 mt-0.5">
+              {formatDateWithDay(sermon.date)}
+            </p>
+          </div>
 
-    {/* 오른쪽: 저장 상태 */}
-    <div className="ml-auto text-xs w-20 text-right z-10">
-      {saveStatus === 'saving' && '저장 중'}
-      {saveStatus === 'saved' && '✓ 저장됨'}
-      {saveStatus === 'error' && '⚠ 오류'}
-    </div>
+          {/* 오른쪽 저장 상태 */}
+          <div className="ml-auto text-xs w-20 text-right z-10">
+            {saveStatus === 'saving' && '저장 중'}
+            {saveStatus === 'saved' && '✓ 저장됨'}
+            {saveStatus === 'error' && '⚠ 오류'}
+          </div>
+        </div>
+      </header>
 
-  </div>
-</header>
-
-      {/* 본문 */}
+      {/* ===============================
+          본문
+      ================================ */}
       <main className="flex-1 max-w-2xl mx-auto w-full px-4 py-4">
-        <div className="border rounded-xl p-4 mb-4">
-          <h2 className="font-semibold mb-2">{currentSection.title}</h2>
+        <div className="border rounded-xl p-5 mb-4 space-y-4">
+          {/* 구간 제목 */}
+          <div className="flex items-center gap-2">
+            <span className="w-7 h-7 rounded-full bg-black text-white text-sm font-bold flex items-center justify-center">
+              {currentIndex + 1}
+            </span>
+            <h2 className="font-semibold text-black">
+              {currentSection.title}
+            </h2>
+          </div>
 
+          {/* 성경 본문 */}
+          {currentSection.key_verses && (
+            <div className="bg-gray-50 rounded-lg px-3 py-2 text-sm font-medium text-gray-800">
+              📖 {currentSection.key_verses}
+            </div>
+          )}
+
+          {/* 요약 */}
           {currentSection.summary && (
-            <p className="text-sm text-gray-700 whitespace-pre-line mb-4">
+            <p className="text-sm text-gray-700 whitespace-pre-line">
               {currentSection.summary}
             </p>
           )}
 
-          <textarea
-            className="w-full border rounded-lg p-3"
-            rows={10}
-            placeholder="설교를 들으며 메모해 보세요"
-            value={notes[currentSection.id] || ''}
-            onChange={(e) =>
-              handleChange(currentSection.id, e.target.value)
-            }
-          />
+          {/* 메모 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              ✍🏻 나의 메모
+            </label>
+            <textarea
+              className="w-full border rounded-lg p-3 leading-relaxed focus:outline-none focus:ring-2 focus:ring-black/20"
+              rows={10}
+              placeholder="설교를 들으며 메모해 보세요"
+              value={notes[currentSection.id] || ''}
+              onChange={(e) =>
+                handleChange(currentSection.id, e.target.value)
+              }
+            />
+          </div>
         </div>
 
         {/* 완료 버튼 */}
