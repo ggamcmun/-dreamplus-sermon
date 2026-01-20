@@ -157,25 +157,36 @@ export default function SermonNoteClient({
     <div className="min-h-screen bg-white flex flex-col">
       {/* 헤더 */}
       <header className="bg-black text-white sticky top-0 z-10">
-        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="text-gray-300 hover:text-white">
-            ←
-          </Link>
+  <div className="max-w-2xl mx-auto px-4 py-3 relative flex items-center">
+    
+    {/* 왼쪽: 뒤로가기 */}
+    <Link
+      href="/"
+      className="text-gray-300 hover:text-white transition-colors z-10"
+      aria-label="뒤로가기"
+    >
+      ←
+    </Link>
 
-          <div className="text-center flex-1 mx-4">
-            <h1 className="text-sm font-medium truncate">{sermon.title}</h1>
-            <p className="text-xs text-gray-400">
-              {formatDateWithDay(sermon.date)}
-            </p>
-          </div>
+    {/* 가운데: 제목 (진짜 중앙 고정) */}
+    <div className="absolute left-1/2 -translate-x-1/2 text-center">
+      <h1 className="text-sm font-medium text-white truncate max-w-[220px]">
+        {sermon.title}
+      </h1>
+      <p className="text-xs text-gray-400">
+        {formatDateWithDay(sermon.date)}
+      </p>
+    </div>
 
-          <div className="text-xs w-20 text-right">
-            {saveStatus === 'saving' && '저장 중'}
-            {saveStatus === 'saved' && '✓ 저장됨'}
-            {saveStatus === 'error' && '⚠ 오류'}
-          </div>
-        </div>
-      </header>
+    {/* 오른쪽: 저장 상태 */}
+    <div className="ml-auto text-xs w-20 text-right z-10">
+      {saveStatus === 'saving' && '저장 중'}
+      {saveStatus === 'saved' && '✓ 저장됨'}
+      {saveStatus === 'error' && '⚠ 오류'}
+    </div>
+
+  </div>
+</header>
 
       {/* 본문 */}
       <main className="flex-1 max-w-2xl mx-auto w-full px-4 py-4">
