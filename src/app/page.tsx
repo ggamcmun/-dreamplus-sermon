@@ -11,15 +11,15 @@ export default function HomePage() {
       </header>
 
       {/* 배너 클릭 영역 */}
-      <main className="flex-1 flex items-center justify-center px-4 py-12">
-        <Link href="/sermon" className="block w-full max-w-2xl">
-          <img
-            src="/home-banner.png"
-            alt="설교노트로 이동"
-            className="w-full cursor-pointer transition-transform hover:scale-[1.02]"
-          />
-        </Link>
-      </main>
+     <main className="flex-1 px-4 py-6">
+  <Link href="/sermon" className="block w-full max-w-2xl mx-auto">
+    <img
+      src="/home-banner.png"
+      alt="설교노트로 이동"
+      className="w-full cursor-pointer transition-transform hover:scale-[1.02]"
+    />
+  </Link>
+</main>
 
       {/* 푸터 */}
       <footer className="border-t border-[rgba(10,143,130,0.25)]">
