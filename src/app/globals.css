@@ -6,8 +6,8 @@
 @tailwind utilities;
 
 /* ===============================
-  브랜드 컬러 변수 (청록 배경 + 톤다운 핑크)
-  ⚠️ 중복 변수 제거/정리 완료
+  브랜드 컬러 변수
+  (홈 기준: 블랙 & 화이트)
 ================================ */
 :root {
   --color-black: #000000;
@@ -16,18 +16,17 @@
   --color-light-gray: #b3b3b3;
   --color-white: #ffffff;
 
-  /* ✅ 너가 원하는 톤 */
-  --color-bg-main: #0a8f82;                 /* 청록 */
-  --color-text-main: #f6b7b4;               /* 핑크 */
+  /* ※ 설교노트용 컬러는 유지하되,
+     홈에서는 사용 안 됨 */
+  --color-bg-main: #0a8f82;
+  --color-text-main: #f6b7b4;
   --color-text-sub: rgba(246, 183, 180, 0.78);
 
-  /* ✅ 테두리/라인용 (핑크 계열) */
-  --color-border: rgba(246, 183, 180, 0.35);
+  --color-border: #e5e5e5;
 }
 
 /* ===============================
-  PretendardStd 폰트 선언
-  (public/fonts 폴더 기준)
+  PretendardStd 폰트
 ================================ */
 @font-face {
   font-family: "PretendardStd";
@@ -54,7 +53,9 @@
 /* ===============================
   기본 리셋
 ================================ */
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 html {
   scroll-behavior: smooth;
@@ -62,27 +63,25 @@ html {
 }
 
 /* ===============================
-  ⭐️ 전체 기본 스타일 (배경/글자 톤 적용)
-  ✅ 여기서 “전체 배경 = 청록 / 전체 글자 = 핑크”로 강제됨
+  ⭐️ 전체 기본 스타일 (홈 기준)
 ================================ */
 body {
-  font-family: "PretendardStd", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, "Apple SD Gothic Neo", Arial, sans-serif;
-  background-color: var(--color-bg-main);
-  color: var(--color-text-main);
+  font-family: "PretendardStd", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Apple SD Gothic Neo", Arial, sans-serif;
+  background-color: var(--color-white);   /* ✅ 홈 흰 배경 */
+  color: var(--color-black);              /* ✅ 홈 검정 글씨 */
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* ===============================
-  DREAMPLUS 상단바 (청록 배경 + 핑크 글씨)
-  ✅ 네가 원한 “바 색”은 여기서 결정됨
+  DREAMPLUS 상단바 (블랙 & 화이트)
 ================================ */
 .hero-black {
-  background-color: var(--color-bg-main);
-  color: var(--color-text-main);
-  padding: 1.25rem 1rem;     /* 바 두께 */
+  background-color: var(--color-black);   /* ✅ 블랙 */
+  color: var(--color-white);              /* ✅ 화이트 */
+  padding: 1.25rem 1rem;
   text-align: center;
 }
 
@@ -90,76 +89,107 @@ body {
   font-size: 2rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-  margin-bottom: 0.15rem;    /* ✅ 제목-부제 간격 줄임 */
+  margin-bottom: 0.15rem;
 }
 
 .hero-black .subtitle {
   margin-top: 0;
   font-size: 0.95rem;
-  color: var(--color-text-sub);
+  color: rgba(255, 255, 255, 0.7);
   letter-spacing: 0.14em;
 }
 
 /* ===============================
   입력 요소
 ================================ */
-input, textarea, select, button {
+input,
+textarea,
+select,
+button {
   font-family: inherit;
   font-size: 16px;
 }
-textarea { resize: none; }
+
+textarea {
+  resize: none;
+}
 
 /* ===============================
   링크 / 버튼
 ================================ */
-a { color: inherit; text-decoration: none; }
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
 button {
   cursor: pointer;
   transition: all 0.2s ease;
 }
-button:active { transform: scale(0.98); }
+
+button:active {
+  transform: scale(0.98);
+}
 
 /* ===============================
-  포커스 스타일 (핑크 테두리)
+  포커스 스타일 (홈 기준)
 ================================ */
 :focus-visible {
-  outline: 2px solid var(--color-text-main);
+  outline: 2px solid var(--color-black);
   outline-offset: 2px;
 }
 
 /* ===============================
-  스크롤바 (핑크 톤)
+  스크롤바 (미니멀)
 ================================ */
-::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
 ::-webkit-scrollbar-thumb {
-  background: var(--color-text-sub);
+  background: var(--color-light-gray);
   border-radius: 3px;
 }
 
 /* ===============================
   애니메이션
 ================================ */
-.animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
-.animate-slide-up { animation: slideUp 0.4s ease-out forwards; }
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
 
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.animate-slide-up {
+  animation: slideUp 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ===============================
-  노트 입력 영역 (배경 흰색 유지 + 테두리 핑크)
-  ✅ “입력칸은 흰색, 전체 톤은 청록+핑크”로 예쁘게
+  노트 입력 영역
+  (홈에서도 문제없게 중립톤)
 ================================ */
 .note-textarea {
-  min-height: 180px;                  /* ✅ 입력칸 더 크게 */
+  min-height: 180px;
   padding: 1rem;
-  border: 2px solid var(--color-border);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   background: var(--color-white);
-  color: var(--color-dark-gray);      /* ✅ 입력칸 글씨는 진한색(가독성) */
+  color: var(--color-dark-gray);
   line-height: 1.8;
 }
 
@@ -168,30 +198,30 @@ button:active { transform: scale(0.98); }
 }
 
 .note-textarea:focus {
-  border-color: var(--color-text-main);
+  border-color: var(--color-black);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(246, 183, 180, 0.18);
 }
 
 /* ===============================
-  구간 카드 (흰 배경 + 핑크 라인)
+  카드 (홈 기본 스타일)
 ================================ */
 .section-card {
-  background: var(--color-bg-main);        /* 청록 배경 */
+  background: var(--color-white);
   border-radius: 16px;
   padding: 1.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.85); /* ✅ 흰색 라인 */
-  color: var(--color-text-main);           /* 핑크 글씨 */
+  border: 1px solid var(--color-border);
+  color: var(--color-black);
 }
 
 .section-card.active {
-  border-color: #ffffff;                   /* ✅ 활성화 시도 흰색 */
-  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.18);
+  border-color: var(--color-black);
 }
 
 /* ===============================
   모바일 보정
 ================================ */
 @media (max-width: 640px) {
-  body { font-size: 15px; }
+  body {
+    font-size: 15px;
+  }
 }
