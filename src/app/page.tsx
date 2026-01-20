@@ -26,52 +26,65 @@ export default async function HomePage() {
   const latest = await getLatestPublishedSermon()
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-black">
-      {/* ✅ 홈 상단: 블랙/화이트 고정 */}
-      <header className="bg-black text-white text-center px-4 py-6">
-        <div className="text-4xl font-extrabold tracking-tight leading-none">
+    <div className="flex min-h-screen flex-col bg-white text-black">
+      {/* ===============================
+          상단 헤더 (블랙 & 화이트 고정)
+      ================================ */}
+      <header className="bg-black text-white text-center py-8 px-4">
+        <div className="text-3xl font-extrabold tracking-tight">
           DREAMPLUS
         </div>
-
-        <div className="mt-4 text-sm leading-relaxed opacity-90">
-          ⏰ 매주 수요일 저녁 <span className="font-semibold">19:30</span>
-          <br />
-          📍 <span className="font-semibold">성수 서울드림비전센터</span>
-          <br />
-          <span className="text-xs opacity-75">
+        <div className="mt-3 text-sm leading-relaxed opacity-85">
+          🗓️ 매주 수요일 저녁 19:30<br />
+          📍 성수 서울드림비전센터<br />
+          <span className="text-xs opacity-80">
             (서울 성동구 왕십리로 88, 노벨빌딩 B1)
           </span>
         </div>
       </header>
 
-      {/* ✅ 메인: 배너 클릭 -> 최신 설교 */}
-      <main className="max-w-2xl mx-auto w-full px-4 py-8 flex-1">
+      {/* ===============================
+          메인 콘텐츠
+      ================================ */}
+      <main className="max-w-2xl mx-auto w-full px-4 py-10 flex-1">
         {latest ? (
-          <Link href={`/sermon/${latest.slug}`} className="block">
+          <Link
+            href={`/sermon/${latest.slug}`}
+            className="block cursor-pointer group"
+          >
             <img
               src="/home-banner.png"
-              alt="DREAMPLUS 배너"
-              className="w-full h-auto"
+              alt="이번 주 설교 노트 바로가기"
+              className="
+                w-full h-auto
+                transition-all duration-300
+                group-hover:brightness-90
+              "
             />
           </Link>
         ) : (
-          <div>
+          <>
             <img
               src="/home-banner.png"
               alt="DREAMPLUS 배너"
               className="w-full h-auto opacity-60"
             />
-            <p className="mt-4 text-sm text-gray-600">
-              아직 공개된 설교가 없습니다. (관리자에서 공개로 전환 후 다시 확인해 주세요)
+            <p className="mt-6 text-sm text-gray-600 text-center">
+              아직 공개된 설교가 없습니다.<br />
+              관리자 페이지에서 설교를 공개로 전환해 주세요.
             </p>
-          </div>
+          </>
         )}
       </main>
 
-      {/* ✅ 푸터: 화면 아래에 붙게 */}
+      {/* ===============================
+          푸터 (항상 바로 보이게)
+      ================================ */}
       <footer className="border-t border-gray-200">
-        <div className="max-w-2xl mx-auto px-4 py-5 text-center">
-          <p className="text-xs text-gray-500">© DREAMPLUS · 서울드림교회</p>
+        <div className="max-w-2xl mx-auto px-4 py-4 text-center">
+          <p className="text-xs text-gray-500">
+            © DREAMPLUS · 서울드림교회
+          </p>
         </div>
       </footer>
     </div>
