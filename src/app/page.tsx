@@ -26,7 +26,7 @@ export default async function HomePage() {
   const latest = await getLatestPublishedSermon()
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-black">
+    <div className="flex flex-col bg-white text-black">
       {/* ✅ 홈 상단은 무조건 블랙/화이트로 고정 (CSS 변수 영향 최소화) */}
       <header className="bg-black text-white text-center py-6 px-4">
         <div className="text-2xl font-bold tracking-tight">DREAMPLUS</div>
