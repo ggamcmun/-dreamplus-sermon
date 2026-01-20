@@ -169,14 +169,14 @@ export default function SermonNoteClient({
     </Link>
 
     {/* 가운데: 제목 (진짜 중앙 고정) */}
-    <div className="absolute left-1/2 -translate-x-1/2 text-center">
-      <h1 className="text-sm font-medium text-white truncate max-w-[220px]">
-        {sermon.title}
-      </h1>
-      <p className="text-xs text-gray-400">
-        {formatDateWithDay(sermon.date)}
-      </p>
-    </div>
+   <div className="absolute left-1/2 -translate-x-1/2 text-center w-[70%]">
+  <h1 className="text-sm font-medium text-white leading-tight whitespace-normal break-words">
+    {sermon.title}
+  </h1>
+  <p className="text-xs text-gray-400 mt-0.5">
+    {formatDateWithDay(sermon.date)}
+  </p>
+</div>
 
     {/* 오른쪽: 저장 상태 */}
     <div className="ml-auto text-xs w-20 text-right z-10">
