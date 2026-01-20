@@ -26,39 +26,51 @@ export default async function HomePage() {
   const latest = await getLatestPublishedSermon()
 
   return (
-    <div className="flex flex-col bg-white text-black">
-      {/* ✅ 홈 상단은 무조건 블랙/화이트로 고정 (CSS 변수 영향 최소화) */}
-      <header className="bg-black text-white text-center py-6 px-4">
-        <div className="text-2xl font-bold tracking-tight">DREAMPLUS</div>
-        <div className="text-sm opacity-80 mt-1">나만의 설교노트</div>
+    <div className="min-h-screen flex flex-col bg-white text-black">
+      {/* ✅ 홈 상단: 블랙/화이트 고정 */}
+      <header className="bg-black text-white text-center px-4 py-6">
+        <div className="text-4xl font-extrabold tracking-tight leading-none">
+          DREAMPLUS
+        </div>
+
+        <div className="mt-4 text-sm leading-relaxed opacity-90">
+          ⏰ 매주 수요일 저녁 <span className="font-semibold">19:30</span>
+          <br />
+          📍 <span className="font-semibold">성수 서울드림비전센터</span>
+          <br />
+          <span className="text-xs opacity-75">
+            (서울 성동구 왕십리로 88, 노벨빌딩 B1)
+          </span>
+        </div>
       </header>
 
+      {/* ✅ 메인: 배너 클릭 -> 최신 설교 */}
       <main className="max-w-2xl mx-auto w-full px-4 py-8 flex-1">
-        {/* ✅ 배너 클릭 -> 최신 공개 설교로 이동 */}
         {latest ? (
           <Link href={`/sermon/${latest.slug}`} className="block">
             <img
               src="/home-banner.png"
               alt="DREAMPLUS 배너"
-              className="w-full"
+              className="w-full h-auto"
             />
           </Link>
         ) : (
-          <>
+          <div>
             <img
               src="/home-banner.png"
               alt="DREAMPLUS 배너"
-              className="w-full opacity-60"
+              className="w-full h-auto opacity-60"
             />
             <p className="mt-4 text-sm text-gray-600">
               아직 공개된 설교가 없습니다. (관리자에서 공개로 전환 후 다시 확인해 주세요)
             </p>
-          </>
+          </div>
         )}
       </main>
 
+      {/* ✅ 푸터: 화면 아래에 붙게 */}
       <footer className="border-t border-gray-200">
-        <div className="max-w-2xl mx-auto px-4 py-6 text-center">
+        <div className="max-w-2xl mx-auto px-4 py-5 text-center">
           <p className="text-xs text-gray-500">© DREAMPLUS · 서울드림교회</p>
         </div>
       </footer>
