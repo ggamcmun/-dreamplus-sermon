@@ -6,6 +6,11 @@ export interface Sermon {
   description?: string
   is_published: boolean
   slug: string
+
+  // ✅ 배너 이미지 경로(예: "/home-banner.png" 또는 "/home-banner02.png")
+  // 없을 수도 있으니 optional + null 허용
+  banner_image?: string | null
+
   created_at: string
   updated_at: string
 }
