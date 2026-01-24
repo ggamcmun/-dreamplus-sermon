@@ -4,22 +4,48 @@ import type { Sermon } from '@/types'
 
 export const revalidate = 0
 
-async function getPublishedSermons(): Promise<Sermon[]> {
+type SermonRow = Sermon & {
+  banner_image?: string | null
+  published_at?: string | null
+}
+
+async function getPublishedSermons(): Promise<SermonRow[]> {
   const supabase = createClient()
 
+  // ✅ published_at 정렬을 쓰고 싶지만, 컬럼이 없을 수도 있어서
+  // 일단 둘 다 가져오고, 정렬은 아래에서 안전하게 처리함
   const { data, error } = await supabase
     .from('sermons')
-    .select('*')
+    .select('id,title,date,preacher,description,is_published,slug,created_at,updated_at,banner_image,published_at')
     .eq('is_published', true)
-    // ✅ 발행 순서 기준 (가장 중요)
-    .order('published_at', { ascending: false })
 
   if (error) {
     console.error('설교 조회 오류:', error)
     return []
   }
 
-  return data ?? []
+  const rows = (data ?? []) as SermonRow[]
+
+  // ✅ 정렬 우선순위: published_at > date > created_at
+  rows.sort((a, b) => {
+    const ap = a.published_at ? new Date(a.published_at).getTime() : NaN
+    const bp = b.published_at ? new Date(b.published_at).getTime() : NaN
+    if (!Number.isNaN(ap) && !Number.isNaN(bp) && ap !== bp) return bp - ap
+    if (!Number.isNaN(ap) && Number.isNaN(bp)) return -1
+    if (Number.isNaN(ap) && !Number.isNaN(bp)) return 1
+
+    const ad = a.date ? new Date(a.date).getTime() : NaN
+    const bd = b.date ? new Date(b.date).getTime() : NaN
+    if (!Number.isNaN(ad) && !Number.isNaN(bd) && ad !== bd) return bd - ad
+    if (!Number.isNaN(ad) && Number.isNaN(bd)) return -1
+    if (Number.isNaN(ad) && !Number.isNaN(bd)) return 1
+
+    const ac = a.created_at ? new Date(a.created_at).getTime() : 0
+    const bc = b.created_at ? new Date(b.created_at).getTime() : 0
+    return bc - ac
+  })
+
+  return rows
 }
 
 export default async function HomePage() {
@@ -54,27 +80,30 @@ export default async function HomePage() {
           </p>
         )}
 
-        {sermons.map((sermon, index) => (
-          <Link
-            key={sermon.id}
-            href={`/sermon/${sermon.slug}`}
-            className="block group"
-          >
-            <img
-              src={
-                index === 0
-                  ? '/home-banner.png'      // ✅ 가장 최신 설교
-                  : '/home-banner02.png'    // ✅ 그 이전 설교들
-              }
-              alt={sermon.title}
-              className="
-                w-full h-auto
-                transition-all duration-300
-                group-hover:brightness-90
-              "
-            />
-          </Link>
-        ))}
+        {sermons.map((sermon) => {
+          const bannerSrc = sermon.banner_image?.trim()
+            ? sermon.banner_image
+            : '/home-banner.png' // 기본값
+
+          return (
+            <Link
+              key={sermon.id}
+              href={`/sermon/${sermon.slug}`}
+              className="block group"
+            >
+              <img
+                src={bannerSrc}
+                alt={sermon.title}
+                className="
+                  w-full h-auto
+                  transition-all duration-300
+                  group-hover:brightness-90
+                  group-hover:contrast-110
+                "
+              />
+            </Link>
+          )
+        })}
       </main>
 
       {/* ===============================
