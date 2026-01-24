@@ -4,7 +4,11 @@ import type { Sermon } from '@/types'
 
 export const revalidate = 0
 
-async function getLatestPublishedSermon(): Promise<Sermon | null> {
+/* ===============================
+   공개된 설교 전체 가져오기
+   (최신 날짜가 맨 위)
+================================ */
+async function getPublishedSermons(): Promise<Sermon[]> {
   const supabase = createClient()
 
   const { data, error } = await supabase
@@ -12,23 +16,22 @@ async function getLatestPublishedSermon(): Promise<Sermon | null> {
     .select('*')
     .eq('is_published', true)
     .order('date', { ascending: false })
-    .limit(1)
 
   if (error) {
     console.error('설교 조회 오류:', error)
-    return null
+    return []
   }
 
-  return data?.[0] ?? null
+  return data ?? []
 }
 
 export default async function HomePage() {
-  const latest = await getLatestPublishedSermon()
+  const sermons = await getPublishedSermons()
 
   return (
     <div className="flex min-h-screen flex-col bg-white text-black">
       {/* ===============================
-          상단 헤더 (블랙 & 화이트 고정)
+          상단 헤더
       ================================ */}
       <header className="bg-black text-white text-center py-8 px-4">
         <div className="text-3xl font-extrabold tracking-tight">
@@ -47,57 +50,35 @@ export default async function HomePage() {
           메인 콘텐츠
       ================================ */}
       <main className="max-w-2xl mx-auto w-full px-4 py-10 flex-1">
-        {latest ? (
-          <>
-            {/* ✅ 첫 번째 배너: 최신 공개 설교로 이동 */}
-            <Link
-              href={`/sermon/${latest.slug}`}
-              className="block cursor-pointer group"
-            >
-              <img
-                src="/home-banner.png"
-                alt="이번 주 설교 노트 바로가기"
-                className="
-                  w-full h-auto
-                  transition-all duration-300
-                  group-hover:brightness-90
-                "
-              />
-            </Link>
-
-            {/* ✅ 두 번째 배너: 고정 슬러그로 이동 */}
-            <Link
-              href="/sermon/20260128-교회-2-꼭-교회에-다녀야만-예수님을-믿을-수-있나요"
-              className="block cursor-pointer group mt-4"
-            >
-              <img
-                src="/home-banner02.png"
-                alt="교회 #2 설교 노트 바로가기"
-                className="
-                  w-full h-auto
-                  transition-all duration-300
-                  group-hover:brightness-90
-                "
-              />
-            </Link>
-          </>
+        {sermons.length > 0 ? (
+          <div className="space-y-4">
+            {sermons.map((sermon) => (
+              <Link
+                key={sermon.id}
+                href={`/sermon/${sermon.slug}`}
+                className="block group"
+              >
+                <img
+                  src={`/${sermon.banner_image ?? 'home-banner.png'}`}
+                  alt={sermon.title}
+                  className="
+                    w-full h-auto
+                    transition-all duration-300
+                    group-hover:brightness-90
+                  "
+                />
+              </Link>
+            ))}
+          </div>
         ) : (
-          <>
-            <img
-              src="/home-banner.png"
-              alt="DREAMPLUS 배너"
-              className="w-full h-auto opacity-60"
-            />
-            <p className="mt-6 text-sm text-gray-600 text-center">
-              아직 공개된 설교가 없습니다.<br />
-              관리자 페이지에서 설교를 공개로 전환해 주세요.
-            </p>
-          </>
+          <p className="text-center text-gray-500">
+            아직 공개된 설교가 없습니다.
+          </p>
         )}
       </main>
 
       {/* ===============================
-          푸터 (항상 바로 보이게)
+          푸터
       ================================ */}
       <footer className="border-t border-gray-200">
         <div className="max-w-2xl mx-auto px-4 py-4 text-center">
