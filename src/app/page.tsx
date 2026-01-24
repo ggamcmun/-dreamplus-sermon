@@ -4,10 +4,6 @@ import type { Sermon } from '@/types'
 
 export const revalidate = 0
 
-/* ===============================
-   공개된 설교 전체 가져오기
-   (최신 날짜가 맨 위)
-================================ */
 async function getPublishedSermons(): Promise<Sermon[]> {
   const supabase = createClient()
 
@@ -15,7 +11,10 @@ async function getPublishedSermons(): Promise<Sermon[]> {
     .from('sermons')
     .select('*')
     .eq('is_published', true)
-    .order('date', { ascending: false })
+    // ✅ 가장 최근에 만든 설교가 무조건 맨 위
+    .order('created_at', { ascending: false })
+    // (동일 생성시간 대비 보조 정렬)
+    .order('date', { ascending: false, nullsFirst: false })
 
   if (error) {
     console.error('설교 조회 오류:', error)
@@ -30,61 +29,36 @@ export default async function HomePage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-white text-black">
-      {/* ===============================
-          상단 헤더
-      ================================ */}
       <header className="bg-black text-white text-center py-8 px-4">
-        <div className="text-3xl font-extrabold tracking-tight">
-          DREAMPLUS
-        </div>
+        <div className="text-3xl font-extrabold tracking-tight">DREAMPLUS</div>
         <div className="mt-3 text-sm leading-relaxed opacity-85">
           🗓️ 매주 수요일 저녁 19:30<br />
           📍 성수 서울드림비전센터<br />
-          <span className="text-xs opacity-80">
-            (서울 성동구 왕십리로 88, 노벨빌딩 B1)
-          </span>
+          <span className="text-xs opacity-80">(서울 성동구 왕십리로 88, 노벨빌딩 B1)</span>
         </div>
       </header>
 
-      {/* ===============================
-          메인 콘텐츠
-      ================================ */}
       <main className="max-w-2xl mx-auto w-full px-4 py-10 flex-1">
         {sermons.length > 0 ? (
           <div className="space-y-4">
             {sermons.map((sermon) => (
-              <Link
-                key={sermon.id}
-                href={`/sermon/${sermon.slug}`}
-                className="block group"
-              >
+              <Link key={sermon.id} href={`/sermon/${sermon.slug}`} className="block group">
                 <img
-                  src={`/${sermon.banner_image ?? 'home-banner.png'}`}
+                  src={`/${(sermon as any).banner_image ?? 'home-banner.png'}`}
                   alt={sermon.title}
-                  className="
-                    w-full h-auto
-                    transition-all duration-300
-                    group-hover:brightness-90
-                  "
+                  className="w-full h-auto transition-all duration-300 group-hover:brightness-90"
                 />
               </Link>
             ))}
           </div>
         ) : (
-          <p className="text-center text-gray-500">
-            아직 공개된 설교가 없습니다.
-          </p>
+          <p className="text-center text-gray-500">아직 공개된 설교가 없습니다.</p>
         )}
       </main>
 
-      {/* ===============================
-          푸터
-      ================================ */}
       <footer className="border-t border-gray-200">
         <div className="max-w-2xl mx-auto px-4 py-4 text-center">
-          <p className="text-xs text-gray-500">
-            © DREAMPLUS · 서울드림교회
-          </p>
+          <p className="text-xs text-gray-500">© DREAMPLUS · 서울드림교회</p>
         </div>
       </footer>
     </div>
