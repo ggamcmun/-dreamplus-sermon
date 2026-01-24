@@ -11,8 +11,8 @@ async function getPublishedSermons(): Promise<Sermon[]> {
     .from('sermons')
     .select('*')
     .eq('is_published', true)
-    .order('date', { ascending: false })        // ✅ 최근 설교가 맨 위
-    .order('created_at', { ascending: false })  // ✅ 같은 날짜면 최신 업로드
+    // ✅ 가장 최근에 만든 설교가 무조건 맨 위
+    .order('created_at', { ascending: false })
 
   if (error) {
     console.error('설교 조회 오류:', error)
@@ -27,9 +27,13 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-black">
-      {/* 헤더 */}
+      {/* ===============================
+          상단 헤더
+      ================================ */}
       <header className="bg-black text-white text-center py-8 px-4">
-        <div className="text-3xl font-extrabold tracking-tight">DREAMPLUS</div>
+        <div className="text-3xl font-extrabold tracking-tight">
+          DREAMPLUS
+        </div>
         <div className="mt-3 text-sm leading-relaxed opacity-85">
           🗓️ 매주 수요일 저녁 19:30<br />
           📍 성수 서울드림비전센터<br />
@@ -39,7 +43,9 @@ export default async function HomePage() {
         </div>
       </header>
 
-      {/* 설교 리스트 */}
+      {/* ===============================
+          메인 콘텐츠
+      ================================ */}
       <main className="max-w-2xl mx-auto w-full px-4 py-10 flex-1 space-y-6">
         {sermons.length === 0 && (
           <p className="text-center text-sm text-gray-500">
@@ -66,7 +72,9 @@ export default async function HomePage() {
         ))}
       </main>
 
-      {/* 푸터 */}
+      {/* ===============================
+          푸터
+      ================================ */}
       <footer className="border-t border-gray-200">
         <div className="max-w-2xl mx-auto px-4 py-4 text-center">
           <p className="text-xs text-gray-500">
