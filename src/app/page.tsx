@@ -48,20 +48,39 @@ export default async function HomePage() {
       ================================ */}
       <main className="max-w-2xl mx-auto w-full px-4 py-10 flex-1">
         {latest ? (
-          <Link
-            href={`/sermon/${latest.slug}`}
-            className="block cursor-pointer group"
-          >
-            <img
-              src="/home-banner.png"
-              alt="이번 주 설교 노트 바로가기"
-              className="
-                w-full h-auto
-                transition-all duration-300
-                group-hover:brightness-90
-              "
-            />
-          </Link>
+          <>
+            {/* ✅ 첫 번째 배너: 최신 공개 설교로 이동 */}
+            <Link
+              href={`/sermon/${latest.slug}`}
+              className="block cursor-pointer group"
+            >
+              <img
+                src="/home-banner.png"
+                alt="이번 주 설교 노트 바로가기"
+                className="
+                  w-full h-auto
+                  transition-all duration-300
+                  group-hover:brightness-90
+                "
+              />
+            </Link>
+
+            {/* ✅ 두 번째 배너: 고정 슬러그로 이동 */}
+            <Link
+              href="/sermon/20260128-교회-2-꼭-교회에-다녀야만-예수님을-믿을-수-있나요"
+              className="block cursor-pointer group mt-4"
+            >
+              <img
+                src="/home-banner02.png"
+                alt="교회 #2 설교 노트 바로가기"
+                className="
+                  w-full h-auto
+                  transition-all duration-300
+                  group-hover:brightness-90
+                "
+              />
+            </Link>
+          </>
         ) : (
           <>
             <img
