@@ -11,8 +11,8 @@ async function getPublishedSermons(): Promise<Sermon[]> {
     .from('sermons')
     .select('*')
     .eq('is_published', true)
-    // ✅ 가장 최근에 만든 설교가 무조건 맨 위
-    .order('created_at', { ascending: false })
+    // ✅ 발행 순서 기준 (가장 중요)
+    .order('published_at', { ascending: false })
 
   if (error) {
     console.error('설교 조회 오류:', error)
@@ -44,7 +44,8 @@ export default async function HomePage() {
       </header>
 
       {/* ===============================
-          메인 콘텐츠
+          설교 배너 리스트
+          ✅ 최신 발행 설교가 맨 위
       ================================ */}
       <main className="max-w-2xl mx-auto w-full px-4 py-10 flex-1 space-y-6">
         {sermons.length === 0 && (
@@ -60,7 +61,11 @@ export default async function HomePage() {
             className="block group"
           >
             <img
-              src={index === 0 ? '/home-banner.png' : '/home-banner02.png'}
+              src={
+                index === 0
+                  ? '/home-banner.png'      // ✅ 가장 최신 설교
+                  : '/home-banner02.png'    // ✅ 그 이전 설교들
+              }
               alt={sermon.title}
               className="
                 w-full h-auto
