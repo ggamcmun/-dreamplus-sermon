@@ -12,8 +12,6 @@ type SermonRow = Sermon & {
 async function getPublishedSermons(): Promise<SermonRow[]> {
   const supabase = createClient()
 
-  // ✅ published_at 컬럼이 있을 수도/없을 수도 있어서 일단 다 가져오고
-  // 정렬은 아래에서 안전하게 처리
   const { data, error } = await supabase
     .from('sermons')
     .select(
@@ -56,14 +54,14 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen flex flex-col bg-white text-black">
       {/* ===============================
-          상단 헤더 (조금 더 두껍게 + 새신자 버튼 추가)
+          상단 헤더 (얇게 + 여백 줄임 + 새신자 버튼)
       ================================ */}
-      <header className="bg-black text-white text-center py-5 px-4">
-        <div className="text-4xl font-extrabold tracking-tight">
+      <header className="bg-black text-white text-center py-4 px-4">
+        <div className="text-3xl font-extrabold tracking-tight">
           DREAMPLUS
         </div>
 
-        <div className="mt-4 text-sm leading-relaxed opacity-90">
+        <div className="mt-2 text-sm leading-relaxed opacity-90">
           🗓️ 매주 수요일 저녁 19:30<br />
           📍 성수 서울드림비전센터<br />
           <span className="text-xs opacity-80">
@@ -72,33 +70,33 @@ export default async function HomePage() {
         </div>
 
         {/* ✅ 새신자 등록 버튼(이미지) */}
-      <div className="mt-4">
-  <a
-    href="https://forms.gle/644BY2oLTyzRNSh6A"
-    target="_blank"
-    rel="noreferrer"
-    className="block"
-  >
-    <img
-      src="/newcomer-banner.png"
-      alt="새신자 등록"
-      className="
-        w-full
-        max-w-md
-        mx-auto
-        cursor-pointer
-        transition-all duration-200
-        hover:brightness-95
-        hover:shadow-lg
-      "
-    />
-  </a>
-</div>
+        <div className="mt-2">
+          <a
+            href="https://forms.gle/644BY2oLTyzRNSh6A"
+            target="_blank"
+            rel="noreferrer"
+            className="block"
+          >
+            <img
+              src="/newcomer-banner.png"
+              alt="새신자 등록"
+              className="
+                block
+                w-full
+                max-w-lg
+                mx-auto
+                cursor-pointer
+                transition-all duration-200
+                hover:brightness-95
+                hover:shadow-md
+              "
+            />
+          </a>
+        </div>
       </header>
 
       {/* ===============================
           설교 배너 리스트
-          ✅ 최신 발행 설교가 맨 위
       ================================ */}
       <main className="max-w-2xl mx-auto w-full px-4 py-6 flex-1 space-y-5">
         {sermons.length === 0 && (
