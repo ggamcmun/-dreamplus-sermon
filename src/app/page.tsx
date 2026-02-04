@@ -101,7 +101,7 @@ export default async function HomePage() {
           설교 배너 리스트
           ✅ 최신 발행 설교가 맨 위
       ================================ */}
-      <main className="max-w-2xl mx-auto w-full px-4 py-10 flex-1 space-y-6">
+      <main className="max-w-2xl mx-auto w-full px-4 py-6 flex-1 space-y-5">
         {sermons.length === 0 && (
           <p className="text-center text-sm text-gray-500">
             아직 공개된 설교가 없습니다.
