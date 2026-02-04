@@ -98,7 +98,7 @@ export default async function HomePage() {
               src="/youtube.png"
               alt="YouTube"
               className="
-                h-11 w-11
+                h-12 w-12
                 object-contain
                 opacity-90
                 hover:opacity-100
@@ -118,7 +118,7 @@ export default async function HomePage() {
               src="/newcomer-banner.png"
               alt="새신자 등록"
               className="
-                h-14
+                h-15
                 w-auto
                 object-contain
                 hover:brightness-95
