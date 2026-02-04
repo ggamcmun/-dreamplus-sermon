@@ -38,10 +38,7 @@ async function getPublishedSermons(): Promise<SermonRow[]> {
     const bd = new Date(b.date).getTime()
     if (ad !== bd) return bd - ad
 
-    return (
-      new Date(b.created_at).getTime() -
-      new Date(a.created_at).getTime()
-    )
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   })
 
   return rows
@@ -60,24 +57,28 @@ export default async function HomePage() {
           DREAMPLUS
         </div>
 
-        <div className="mt-2 text-sm opacity-90">
+        <div className="mt-2 text-sm opacity-90 leading-relaxed">
           🗓️ 매주 수요일 저녁 19:30<br />
-          📍 성수 서울드림비전센터
+          📍 성수 서울드림비전센터<br />
+          <span className="text-xs opacity-80">
+            (서울 성동구 왕십리로 88, 노벨빌딩 B1)
+          </span>
         </div>
 
-        {/* 🔥 SNS + 새신자 버튼 (정확한 순서) */}
-        <div className="mt-3 flex items-center justify-center gap-5">
+        {/* 🔥 SNS + 새신자 버튼 (높이 통일 + 간격 정리 + 센터 정확히) */}
+        <div className="mt-3 flex items-center justify-center gap-3">
           {/* 인스타 */}
           <a
             href="https://www.instagram.com/dreamplus._?igsh=OGRwcXo2ODVxb3Vu"
             target="_blank"
             rel="noreferrer"
+            className="inline-flex items-center"
           >
             <img
               src="/insta.png"
               alt="Instagram"
               className="
-                w-7 h-7
+                h-10 w-10
                 object-contain
                 opacity-90
                 hover:opacity-100
@@ -91,12 +92,13 @@ export default async function HomePage() {
             href="https://youtube.com/channel/UCH5cB7IDzauotvZ9MVkEDlg?si=UvkQPYiV4likVmQX"
             target="_blank"
             rel="noreferrer"
+            className="inline-flex items-center"
           >
             <img
               src="/youtube.png"
               alt="YouTube"
               className="
-                w-7 h-7
+                h-10 w-10
                 object-contain
                 opacity-90
                 hover:opacity-100
@@ -105,17 +107,19 @@ export default async function HomePage() {
             />
           </a>
 
-          {/* 새신자 등록 */}
+          {/* 새신자 등록 (아이콘 높이와 동일하게 맞춤) */}
           <a
             href="https://forms.gle/644BY2oLTyzRNSh6A"
             target="_blank"
             rel="noreferrer"
+            className="inline-flex items-center"
           >
             <img
               src="/newcomer-banner.png"
               alt="새신자 등록"
               className="
-                w-36
+                h-10
+                w-auto
                 object-contain
                 hover:brightness-95
                 transition
@@ -135,6 +139,12 @@ export default async function HomePage() {
             <span className="font-medium text-black">
               설교 노트로 들어갈 수 있습니다.
             </span>
+          </p>
+        )}
+
+        {sermons.length === 0 && (
+          <p className="text-center text-sm text-gray-500">
+            아직 공개된 설교가 없습니다.
           </p>
         )}
 
