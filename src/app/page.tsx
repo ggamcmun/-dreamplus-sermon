@@ -26,19 +26,22 @@ async function getPublishedSermons(): Promise<SermonRow[]> {
 
   const rows = (data ?? []) as SermonRow[]
 
-  // ✅ 정렬 우선순위: published_at > date > created_at
+  // 정렬: 발행 → 날짜 → 생성
   rows.sort((a, b) => {
     const ap = a.published_at ? new Date(a.published_at).getTime() : NaN
     const bp = b.published_at ? new Date(b.published_at).getTime() : NaN
     if (!Number.isNaN(ap) && !Number.isNaN(bp) && ap !== bp) return bp - ap
-    if (!Number.isNaN(ap) && Number.isNaN(bp)) return -1
-    if (Number.isNaN(ap) && !Number.isNaN(bp)) return 1
+    if (!Number.isNaN(ap)) return -1
+    if (!Number.isNaN(bp)) return 1
 
-    const ad = a.date ? new Date(a.date).getTime() : NaN
-    const bd = b.date ? new Date(b.date).getTime() : NaN
-    if (!Number.isNaN(ad) && !Number.isNaN(bd) && ad !== bd) return bd - ad
+    const ad = new Date(a.date).getTime()
+    const bd = new Date(b.date).getTime()
+    if (ad !== bd) return bd - ad
 
-    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    return (
+      new Date(b.created_at).getTime() -
+      new Date(a.created_at).getTime()
+    )
   })
 
   return rows
@@ -62,22 +65,9 @@ export default async function HomePage() {
           📍 성수 서울드림비전센터
         </div>
 
-        {/* 🔥 새신자 + SNS 버튼 */}
-        <div className="mt-3 flex items-center justify-center gap-4">
-          {/* 새신자 등록 */}
-          <a
-            href="https://forms.gle/644BY2oLTyzRNSh6A"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <img
-              src="/newcomer-banner.png"
-              alt="새신자 등록"
-              className="w-40 hover:brightness-95 transition"
-            />
-          </a>
-
-          {/* 인스타그램 */}
+        {/* 🔥 SNS + 새신자 버튼 (정확한 순서) */}
+        <div className="mt-3 flex items-center justify-center gap-5">
+          {/* 인스타 */}
           <a
             href="https://www.instagram.com/dreamplus._?igsh=OGRwcXo2ODVxb3Vu"
             target="_blank"
@@ -86,7 +76,13 @@ export default async function HomePage() {
             <img
               src="/insta.png"
               alt="Instagram"
-              className="w-8 h-8 opacity-90 hover:opacity-100 transition"
+              className="
+                w-7 h-7
+                object-contain
+                opacity-90
+                hover:opacity-100
+                transition
+              "
             />
           </a>
 
@@ -99,14 +95,38 @@ export default async function HomePage() {
             <img
               src="/youtube.png"
               alt="YouTube"
-              className="w-8 h-8 opacity-90 hover:opacity-100 transition"
+              className="
+                w-7 h-7
+                object-contain
+                opacity-90
+                hover:opacity-100
+                transition
+              "
+            />
+          </a>
+
+          {/* 새신자 등록 */}
+          <a
+            href="https://forms.gle/644BY2oLTyzRNSh6A"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img
+              src="/newcomer-banner.png"
+              alt="새신자 등록"
+              className="
+                w-36
+                object-contain
+                hover:brightness-95
+                transition
+              "
             />
           </a>
         </div>
       </header>
 
       {/* ===============================
-          설교 안내 + 배너
+          안내 문구 + 설교 배너
       ================================ */}
       <main className="max-w-2xl mx-auto w-full px-4 py-6 flex-1 space-y-5">
         {sermons.length > 0 && (
