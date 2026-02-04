@@ -37,12 +37,8 @@ async function getPublishedSermons(): Promise<SermonRow[]> {
     const ad = a.date ? new Date(a.date).getTime() : NaN
     const bd = b.date ? new Date(b.date).getTime() : NaN
     if (!Number.isNaN(ad) && !Number.isNaN(bd) && ad !== bd) return bd - ad
-    if (!Number.isNaN(ad) && Number.isNaN(bd)) return -1
-    if (Number.isNaN(ad) && !Number.isNaN(bd)) return 1
 
-    const ac = a.created_at ? new Date(a.created_at).getTime() : 0
-    const bc = b.created_at ? new Date(b.created_at).getTime() : 0
-    return bc - ac
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   })
 
   return rows
@@ -54,97 +50,95 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen flex flex-col bg-white text-black">
       {/* ===============================
-          상단 헤더 (얇게 + 여백 줄임 + 새신자 버튼)
+          상단 헤더
       ================================ */}
       <header className="bg-black text-white text-center py-4 px-4">
-        <div className="text-3xl font-extrabold tracking-tight">DREAMPLUS</div>
-
-        <div className="mt-2 text-sm leading-relaxed opacity-90">
-          🗓️ 매주 수요일 저녁 19:30<br />
-          📍 성수 서울드림비전센터<br />
-          <span className="text-xs opacity-80">
-            (서울 성동구 왕십리로 88, 노벨빌딩 B1)
-          </span>
+        <div className="text-3xl font-extrabold tracking-tight">
+          DREAMPLUS
         </div>
 
-        {/* ✅ 새신자 등록 버튼(이미지) */}
-        <div className="mt-2">
+        <div className="mt-2 text-sm opacity-90">
+          🗓️ 매주 수요일 저녁 19:30<br />
+          📍 성수 서울드림비전센터
+        </div>
+
+        {/* 🔥 새신자 + SNS 버튼 */}
+        <div className="mt-3 flex items-center justify-center gap-4">
+          {/* 새신자 등록 */}
           <a
             href="https://forms.gle/644BY2oLTyzRNSh6A"
             target="_blank"
             rel="noreferrer"
-            className="block"
           >
             <img
               src="/newcomer-banner.png"
               alt="새신자 등록"
-              className="
-                block
-                w-1/2
-                mx-auto
-                cursor-pointer
-                transition-all duration-200
-                hover:brightness-95
-                hover:shadow-md
-              "
+              className="w-40 hover:brightness-95 transition"
+            />
+          </a>
+
+          {/* 인스타그램 */}
+          <a
+            href="https://www.instagram.com/dreamplus._?igsh=OGRwcXo2ODVxb3Vu"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img
+              src="/insta.png"
+              alt="Instagram"
+              className="w-8 h-8 opacity-90 hover:opacity-100 transition"
+            />
+          </a>
+
+          {/* 유튜브 */}
+          <a
+            href="https://youtube.com/channel/UCH5cB7IDzauotvZ9MVkEDlg?si=UvkQPYiV4likVmQX"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img
+              src="/youtube.png"
+              alt="YouTube"
+              className="w-8 h-8 opacity-90 hover:opacity-100 transition"
             />
           </a>
         </div>
       </header>
 
       {/* ===============================
-          설교 배너 리스트
+          설교 안내 + 배너
       ================================ */}
       <main className="max-w-2xl mx-auto w-full px-4 py-6 flex-1 space-y-5">
-        {sermons.length === 0 ? (
-          <p className="text-center text-sm text-gray-500">
-            아직 공개된 설교가 없습니다.
+        {sermons.length > 0 && (
+          <p className="text-center text-sm text-gray-600">
+            👇 아래 이미지를 클릭하시면{' '}
+            <span className="font-medium text-black">
+              설교 노트로 들어갈 수 있습니다.
+            </span>
           </p>
-        ) : (
-          <>
-            {/* ✅ 안내 문구 (상단바 바로 아래, 최신 이미지 바로 위) */}
-            <p className="text-center text-sm text-gray-600">
-              아래 이미지를 클릭하시면{' '}
-              <span className="font-medium text-black">
-                설교 노트로 들어갈 수 있습니다.
-              </span>
-            </p>
-
-            {sermons.map((sermon) => {
-              const bannerSrc =
-                sermon.banner_image?.trim()
-                  ? sermon.banner_image
-                  : '/home-banner.png'
-
-              return (
-                <Link
-                  key={sermon.id}
-                  href={`/sermon/${sermon.slug}`}
-                  className="block group"
-                >
-                  <img
-                    src={bannerSrc}
-                    alt={sermon.title}
-                    className="
-                      w-full h-auto
-                      transition-all duration-300
-                      group-hover:brightness-90
-                      group-hover:contrast-110
-                    "
-                  />
-                </Link>
-              )
-            })}
-          </>
         )}
+
+        {sermons.map((sermon) => (
+          <Link
+            key={sermon.id}
+            href={`/sermon/${sermon.slug}`}
+            className="block"
+          >
+            <img
+              src={sermon.banner_image || '/home-banner.png'}
+              alt={sermon.title}
+              className="w-full transition hover:brightness-95"
+            />
+          </Link>
+        ))}
       </main>
 
       {/* ===============================
           푸터
       ================================ */}
       <footer className="border-t border-gray-200">
-        <div className="max-w-2xl mx-auto px-4 py-4 text-center">
-          <p className="text-xs text-gray-500">© DREAMPLUS · 서울드림교회</p>
+        <div className="text-center text-xs text-gray-500 py-4">
+          © DREAMPLUS · 서울드림교회
         </div>
       </footer>
     </div>
