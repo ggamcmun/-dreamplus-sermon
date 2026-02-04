@@ -65,67 +65,54 @@ export default async function HomePage() {
           </span>
         </div>
 
-        {/* ✅ SNS + 새신자 버튼 (높이 통일 + 새신자 폭 제한) */}
-        <div className="mt-3 flex items-center justify-center gap-3">
-          {/* 인스타 */}
+        {/* SNS 링크 */}
+        <div className="mt-4 flex items-center justify-center gap-4">
           <a
             href="https://www.instagram.com/dreamplus._?igsh=OGRwcXo2ODVxb3Vu"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center"
+            className="
+              flex items-center gap-2
+              rounded-full bg-white/10 px-4 py-2
+              text-sm font-medium text-white
+              hover:bg-white/20 transition
+            "
           >
-            <img
-              src="/insta.png"
-              alt="Instagram"
-              className="
-                h-12 w-12
-                object-contain
-                opacity-90
-                hover:opacity-100
-                transition
-              "
-            />
+            <img src="/insta.png" alt="" className="h-5 w-5 object-contain" />
+            <span>Instagram</span>
           </a>
 
-          {/* 유튜브 */}
           <a
             href="https://youtube.com/channel/UCH5cB7IDzauotvZ9MVkEDlg?si=UvkQPYiV4likVmQX"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center"
+            className="
+              flex items-center gap-2
+              rounded-full bg-white/10 px-4 py-2
+              text-sm font-medium text-white
+              hover:bg-white/20 transition
+            "
           >
-            <img
-              src="/youtube.png"
-              alt="YouTube"
-              className="
-                h-12 w-12
-                object-contain
-                opacity-90
-                hover:opacity-100
-                transition
-              "
-            />
+            <img src="/youtube.png" alt="" className="h-5 w-5 object-contain" />
+            <span>YouTube</span>
           </a>
+        </div>
 
-          {/* 새신자 등록 (높이는 동일, 대신 폭만 제한해서 과하게 커지지 않게) */}
+        {/* 새신자 등록 버튼 */}
+        <div className="mt-3 flex justify-center">
           <a
             href="https://forms.gle/644BY2oLTyzRNSh6A"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center"
+            className="
+              inline-flex items-center gap-2
+              rounded-full border border-white/30 px-5 py-2
+              text-sm font-medium text-white
+              hover:bg-white/10 transition
+            "
           >
-            <img
-              src="/newcomer-banner.png"
-              alt="새신자 등록"
-              className="
-                h-12
-                w-auto
-                max-w-[200px]
-                object-contain
-                hover:brightness-95
-                transition
-              "
-            />
+            <span>✋</span>
+            <span>새신자 등록하기</span>
           </a>
         </div>
       </header>
