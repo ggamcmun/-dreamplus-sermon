@@ -58,7 +58,7 @@ export default async function HomePage() {
       {/* ===============================
           상단 헤더 (조금 더 두껍게 + 새신자 버튼 추가)
       ================================ */}
-      <header className="bg-black text-white text-center py-10 px-4">
+      <header className="bg-black text-white text-center py-5 px-4">
         <div className="text-4xl font-extrabold tracking-tight">
           DREAMPLUS
         </div>
