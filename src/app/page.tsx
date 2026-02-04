@@ -98,7 +98,7 @@ export default async function HomePage() {
               src="/youtube.png"
               alt="YouTube"
               className="
-                h-12 w-12
+                h-11 w-11
                 object-contain
                 opacity-90
                 hover:opacity-100
