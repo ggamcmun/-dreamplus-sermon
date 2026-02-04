@@ -104,7 +104,7 @@ export default async function HomePage() {
           <>
             {/* ✅ 안내 문구 (상단바 바로 아래, 최신 이미지 바로 위) */}
             <p className="text-center text-sm text-gray-600">
-              👇 아래 이미지를 클릭하시면{' '}
+              아래 이미지를 클릭하시면{' '}
               <span className="font-medium text-black">
                 설교 노트로 들어갈 수 있습니다.
               </span>
