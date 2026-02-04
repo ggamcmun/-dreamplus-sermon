@@ -84,7 +84,7 @@ export default async function HomePage() {
               alt="새신자 등록"
               className="
                 w-full
-                max-w-md
+                max-w-sm
                 mx-auto
                 cursor-pointer
                 transition-all duration-300
