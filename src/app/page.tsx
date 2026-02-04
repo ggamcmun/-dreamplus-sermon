@@ -65,7 +65,7 @@ export default async function HomePage() {
           </span>
         </div>
 
-        {/* 🔥 SNS + 새신자 버튼 (높이 통일 + 간격 정리 + 센터 정확히) */}
+        {/* ✅ SNS + 새신자 버튼 (높이 통일 + 새신자 폭 제한) */}
         <div className="mt-3 flex items-center justify-center gap-3">
           {/* 인스타 */}
           <a
@@ -78,7 +78,7 @@ export default async function HomePage() {
               src="/insta.png"
               alt="Instagram"
               className="
-                h-10 w-10
+                h-12 w-12
                 object-contain
                 opacity-90
                 hover:opacity-100
@@ -98,7 +98,7 @@ export default async function HomePage() {
               src="/youtube.png"
               alt="YouTube"
               className="
-                h-11 w-11
+                h-12 w-12
                 object-contain
                 opacity-90
                 hover:opacity-100
@@ -107,7 +107,7 @@ export default async function HomePage() {
             />
           </a>
 
-          {/* 새신자 등록 (아이콘 높이와 동일하게 맞춤) */}
+          {/* 새신자 등록 (높이는 동일, 대신 폭만 제한해서 과하게 커지지 않게) */}
           <a
             href="https://forms.gle/644BY2oLTyzRNSh6A"
             target="_blank"
@@ -118,8 +118,9 @@ export default async function HomePage() {
               src="/newcomer-banner.png"
               alt="새신자 등록"
               className="
-                h-15
+                h-12
                 w-auto
+                max-w-[200px]
                 object-contain
                 hover:brightness-95
                 transition
