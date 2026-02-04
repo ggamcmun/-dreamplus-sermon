@@ -57,9 +57,7 @@ export default async function HomePage() {
           상단 헤더 (얇게 + 여백 줄임 + 새신자 버튼)
       ================================ */}
       <header className="bg-black text-white text-center py-4 px-4">
-        <div className="text-3xl font-extrabold tracking-tight">
-          DREAMPLUS
-        </div>
+        <div className="text-3xl font-extrabold tracking-tight">DREAMPLUS</div>
 
         <div className="mt-2 text-sm leading-relaxed opacity-90">
           🗓️ 매주 수요일 저녁 19:30<br />
@@ -98,35 +96,47 @@ export default async function HomePage() {
           설교 배너 리스트
       ================================ */}
       <main className="max-w-2xl mx-auto w-full px-4 py-6 flex-1 space-y-5">
-        {sermons.length === 0 && (
+        {sermons.length === 0 ? (
           <p className="text-center text-sm text-gray-500">
             아직 공개된 설교가 없습니다.
           </p>
+        ) : (
+          <>
+            {/* ✅ 안내 문구 (상단바 바로 아래, 최신 이미지 바로 위) */}
+            <p className="text-center text-sm text-gray-600">
+              👇 아래 이미지를 클릭하시면{' '}
+              <span className="font-medium text-black">
+                설교 노트로 들어갈 수 있습니다.
+              </span>
+            </p>
+
+            {sermons.map((sermon) => {
+              const bannerSrc =
+                sermon.banner_image?.trim()
+                  ? sermon.banner_image
+                  : '/home-banner.png'
+
+              return (
+                <Link
+                  key={sermon.id}
+                  href={`/sermon/${sermon.slug}`}
+                  className="block group"
+                >
+                  <img
+                    src={bannerSrc}
+                    alt={sermon.title}
+                    className="
+                      w-full h-auto
+                      transition-all duration-300
+                      group-hover:brightness-90
+                      group-hover:contrast-110
+                    "
+                  />
+                </Link>
+              )
+            })}
+          </>
         )}
-
-        {sermons.map((sermon) => {
-          const bannerSrc =
-            sermon.banner_image?.trim() ? sermon.banner_image : '/home-banner.png'
-
-          return (
-            <Link
-              key={sermon.id}
-              href={`/sermon/${sermon.slug}`}
-              className="block group"
-            >
-              <img
-                src={bannerSrc}
-                alt={sermon.title}
-                className="
-                  w-full h-auto
-                  transition-all duration-300
-                  group-hover:brightness-90
-                  group-hover:contrast-110
-                "
-              />
-            </Link>
-          )
-        })}
       </main>
 
       {/* ===============================
@@ -134,9 +144,7 @@ export default async function HomePage() {
       ================================ */}
       <footer className="border-t border-gray-200">
         <div className="max-w-2xl mx-auto px-4 py-4 text-center">
-          <p className="text-xs text-gray-500">
-            © DREAMPLUS · 서울드림교회
-          </p>
+          <p className="text-xs text-gray-500">© DREAMPLUS · 서울드림교회</p>
         </div>
       </footer>
     </div>
