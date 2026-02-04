@@ -72,29 +72,28 @@ export default async function HomePage() {
         </div>
 
         {/* ✅ 새신자 등록 버튼(이미지) */}
-        <div className="mt-8">
-          <a
-            href="https://forms.gle/644BY2oLTyzRNSh6A"
-            target="_blank"
-            rel="noreferrer"
-            className="block"
-          >
-            <img
-              src="/newcomer-banner.png"
-              alt="새신자 등록"
-              className="
-                w-full
-                max-w-sm
-                mx-auto
-                cursor-pointer
-                transition-all duration-300
-                hover:scale-[1.03]
-                hover:brightness-95
-                hover:shadow-xl
-              "
-            />
-          </a>
-        </div>
+      <div className="mt-4">
+  <a
+    href="https://forms.gle/644BY2oLTyzRNSh6A"
+    target="_blank"
+    rel="noreferrer"
+    className="block"
+  >
+    <img
+      src="/newcomer-banner.png"
+      alt="새신자 등록"
+      className="
+        w-full
+        max-w-md
+        mx-auto
+        cursor-pointer
+        transition-all duration-200
+        hover:brightness-95
+        hover:shadow-lg
+      "
+    />
+  </a>
+</div>
       </header>
 
       {/* ===============================
