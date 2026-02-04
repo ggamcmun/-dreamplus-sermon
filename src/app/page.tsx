@@ -12,11 +12,13 @@ type SermonRow = Sermon & {
 async function getPublishedSermons(): Promise<SermonRow[]> {
   const supabase = createClient()
 
-  // ✅ published_at 정렬을 쓰고 싶지만, 컬럼이 없을 수도 있어서
-  // 일단 둘 다 가져오고, 정렬은 아래에서 안전하게 처리함
+  // ✅ published_at 컬럼이 있을 수도/없을 수도 있어서 일단 다 가져오고
+  // 정렬은 아래에서 안전하게 처리
   const { data, error } = await supabase
     .from('sermons')
-    .select('id,title,date,preacher,description,is_published,slug,created_at,updated_at,banner_image,published_at')
+    .select(
+      'id,title,date,preacher,description,is_published,slug,created_at,updated_at,banner_image,published_at'
+    )
     .eq('is_published', true)
 
   if (error) {
@@ -54,18 +56,44 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen flex flex-col bg-white text-black">
       {/* ===============================
-          상단 헤더
+          상단 헤더 (조금 더 두껍게 + 새신자 버튼 추가)
       ================================ */}
-      <header className="bg-black text-white text-center py-8 px-4">
-        <div className="text-3xl font-extrabold tracking-tight">
+      <header className="bg-black text-white text-center py-10 px-4">
+        <div className="text-4xl font-extrabold tracking-tight">
           DREAMPLUS
         </div>
-        <div className="mt-3 text-sm leading-relaxed opacity-85">
+
+        <div className="mt-4 text-sm leading-relaxed opacity-90">
           🗓️ 매주 수요일 저녁 19:30<br />
           📍 성수 서울드림비전센터<br />
           <span className="text-xs opacity-80">
             (서울 성동구 왕십리로 88, 노벨빌딩 B1)
           </span>
+        </div>
+
+        {/* ✅ 새신자 등록 버튼(이미지) */}
+        <div className="mt-8">
+          <a
+            href="https://forms.gle/644BY2oLTyzRNSh6A"
+            target="_blank"
+            rel="noreferrer"
+            className="block"
+          >
+            <img
+              src="/newcomer-banner.png"
+              alt="새신자 등록"
+              className="
+                w-full
+                max-w-md
+                mx-auto
+                cursor-pointer
+                transition-all duration-300
+                hover:scale-[1.03]
+                hover:brightness-95
+                hover:shadow-xl
+              "
+            />
+          </a>
         </div>
       </header>
 
@@ -81,9 +109,8 @@ export default async function HomePage() {
         )}
 
         {sermons.map((sermon) => {
-          const bannerSrc = sermon.banner_image?.trim()
-            ? sermon.banner_image
-            : '/home-banner.png' // 기본값
+          const bannerSrc =
+            sermon.banner_image?.trim() ? sermon.banner_image : '/home-banner.png'
 
           return (
             <Link
