@@ -65,26 +65,25 @@ export default async function HomePage() {
           </span>
         </div>
 
-        {/* ✅ SNS + 새신자 버튼 (높이 통일 + 새신자 폭 제한) */}
-        <div className="mt-3 flex items-center justify-center gap-3">
+        {/* 구분선 */}
+        <div className="mt-4 mb-3 mx-auto w-10 border-t border-white/20" />
+
+        {/* SNS + 새신자 등록 */}
+        <div className="flex items-center justify-center gap-3">
           {/* 인스타 */}
           <a
             href="https://www.instagram.com/dreamplus._?igsh=OGRwcXo2ODVxb3Vu"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center"
+            className="
+              flex items-center justify-center
+              w-10 h-10 rounded-full
+              bg-white/15
+              hover:bg-white/25 hover:scale-105
+              transition-all duration-200
+            "
           >
-            <img
-              src="/insta.png"
-              alt="Instagram"
-              className="
-                h-12 w-12
-                object-contain
-                opacity-90
-                hover:opacity-100
-                transition
-              "
-            />
+            <img src="/insta.png" alt="Instagram" className="h-5 w-5 object-contain" />
           </a>
 
           {/* 유튜브 */}
@@ -92,40 +91,34 @@ export default async function HomePage() {
             href="https://youtube.com/channel/UCH5cB7IDzauotvZ9MVkEDlg?si=UvkQPYiV4likVmQX"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center"
+            className="
+              flex items-center justify-center
+              w-10 h-10 rounded-full
+              bg-white/15
+              hover:bg-white/25 hover:scale-105
+              transition-all duration-200
+            "
           >
-            <img
-              src="/youtube.png"
-              alt="YouTube"
-              className="
-                h-12 w-12
-                object-contain
-                opacity-90
-                hover:opacity-100
-                transition
-              "
-            />
+            <img src="/youtube.png" alt="YouTube" className="h-5 w-5 object-contain" />
           </a>
 
-          {/* 새신자 등록 (높이는 동일, 대신 폭만 제한해서 과하게 커지지 않게) */}
+          {/* 세로 구분선 */}
+          <div className="h-5 border-l border-white/20" />
+
+          {/* 새신자 등록 */}
           <a
             href="https://forms.gle/644BY2oLTyzRNSh6A"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center"
+            className="
+              flex items-center gap-1.5
+              rounded-full bg-white px-4 py-2
+              text-xs font-bold text-black
+              hover:bg-gray-100 hover:scale-105
+              transition-all duration-200
+            "
           >
-            <img
-              src="/newcomer-banner.png"
-              alt="새신자 등록"
-              className="
-                h-12
-                w-auto
-                max-w-[200px]
-                object-contain
-                hover:brightness-95
-                transition
-              "
-            />
+            새신자 등록
           </a>
         </div>
       </header>
