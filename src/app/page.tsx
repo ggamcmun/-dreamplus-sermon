@@ -26,7 +26,7 @@ async function getPublishedSermons(): Promise<SermonRow[]> {
 
   const rows = (data ?? []) as SermonRow[]
 
-  // ✅ 정렬 우선순위: published_at > date > created_at
+  // ✅ 정렬 우선순위: published_at > date > created_at (최신이 위로)
   rows.sort((a, b) => {
     const ap = a.published_at ? new Date(a.published_at).getTime() : NaN
     const bp = b.published_at ? new Date(b.published_at).getTime() : NaN
@@ -57,13 +57,13 @@ function getChurchSeriesNumber(title: string) {
 export default async function HomePage() {
   const sermons = await getPublishedSermons()
 
-  // ✅ 교회 시리즈: 제목에 "교회#숫자"가 들어간 설교들만 묶기
+  // ✅ 교회 시리즈: 제목에 "교회#숫자"가 들어간 설교들
   const churchSeries = sermons
     .filter((s) => /교회\s*#\s*\d+/i.test(s.title))
     .sort((a, b) => getChurchSeriesNumber(a.title) - getChurchSeriesNumber(b.title))
 
-  // ✅ 나머지 설교들(교회 시리즈 제외)
-  const others = sermons.filter((s) => !/교회\s*#\s*\d+/i.test(s.title))
+  // ✅ 메인에 보여줄 설교들: 교회 시리즈 제외 (최신 설교가 위로)
+  const mainSermons = sermons.filter((s) => !/교회\s*#\s*\d+/i.test(s.title))
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-black">
@@ -76,9 +76,7 @@ export default async function HomePage() {
         <div className="mt-2 text-sm opacity-90 leading-relaxed">
           🗓️ 매주 수요일 저녁 19:30<br />
           📍 성수 서울드림비전센터<br />
-          <span className="text-xs opacity-80">
-            (서울 성동구 왕십리로 88, 노벨빌딩 B1)
-          </span>
+          <span className="text-xs opacity-80">(서울 성동구 왕십리로 88, 노벨빌딩 B1)</span>
         </div>
 
         {/* ✅ SNS + 새신자 버튼 */}
@@ -125,58 +123,22 @@ export default async function HomePage() {
       </header>
 
       {/* ===============================
-          안내 문구 + 콘텐츠
+          안내 문구 + 메인(최신 설교들)
       ================================ */}
       <main className="max-w-2xl mx-auto w-full px-4 py-6 flex-1 space-y-5">
-        {(churchSeries.length > 0 || others.length > 0) && (
+        {(mainSermons.length > 0 || churchSeries.length > 0) && (
           <p className="text-center text-sm text-gray-600">
             👇 아래 이미지를 클릭하시면{' '}
             <span className="font-medium text-black">설교 노트로 들어갈 수 있습니다.</span>
           </p>
         )}
 
-        {(churchSeries.length === 0 && others.length === 0) && (
+        {(mainSermons.length === 0 && churchSeries.length === 0) && (
           <p className="text-center text-sm text-gray-500">아직 공개된 설교가 없습니다.</p>
         )}
 
-        {/* ===============================
-            ✅ 교회 시리즈 묶음 (버튼 1개 → 펼치면 3개)
-        ================================ */}
-        {churchSeries.length > 0 && (
-          <details className="border border-gray-200 rounded-xl p-3">
-            <summary className="cursor-pointer list-none">
-              <div className="group">
-                <img
-                  src="/church-series.png"
-                  alt="교회 시리즈"
-                  className="w-full h-auto transition group-hover:brightness-95"
-                />
-              </div>
-            </summary>
-
-            <div className="mt-3 space-y-4">
-              {churchSeries.map((sermon) => {
-                const bannerSrc =
-                  sermon.banner_image?.trim() ? sermon.banner_image : '/home-banner.png'
-
-                return (
-                  <Link key={sermon.id} href={`/sermon/${sermon.slug}`} className="block">
-                    <img
-                      src={bannerSrc}
-                      alt={sermon.title}
-                      className="w-full h-auto transition hover:brightness-95"
-                    />
-                  </Link>
-                )
-              })}
-            </div>
-          </details>
-        )}
-
-        {/* ===============================
-            ✅ 나머지 설교들(최신순 그대로)
-        ================================ */}
-        {others.map((sermon) => {
+        {/* ✅ 최신 설교들 (교회 시리즈 제외) */}
+        {mainSermons.map((sermon) => {
           const bannerSrc =
             sermon.banner_image?.trim() ? sermon.banner_image : '/home-banner.png'
 
@@ -190,15 +152,45 @@ export default async function HomePage() {
             </Link>
           )
         })}
+
+        {/* ✅ 교회 시리즈는 아래쪽(과거 묶음)으로 내려서 보여주기 */}
+        {churchSeries.length > 0 && (
+          <div className="pt-4">
+            <details className="border border-gray-200 rounded-xl p-3">
+              <summary className="cursor-pointer list-none">
+                <img
+                  src="/church-series-button.png"
+                  alt="교회 시리즈 모아보기"
+                  className="w-full h-auto transition hover:brightness-95"
+                />
+              </summary>
+
+              <div className="mt-3 space-y-4">
+                {churchSeries.map((sermon) => {
+                  const bannerSrc =
+                    sermon.banner_image?.trim() ? sermon.banner_image : '/home-banner.png'
+
+                  return (
+                    <Link key={sermon.id} href={`/sermon/${sermon.slug}`} className="block">
+                      <img
+                        src={bannerSrc}
+                        alt={sermon.title}
+                        className="w-full h-auto transition hover:brightness-95"
+                      />
+                    </Link>
+                  )
+                })}
+              </div>
+            </details>
+          </div>
+        )}
       </main>
 
       {/* ===============================
           푸터
       ================================ */}
       <footer className="border-t border-gray-200">
-        <div className="text-center text-xs text-gray-500 py-4">
-          © DREAMPLUS · 서울드림교회
-        </div>
+        <div className="text-center text-xs text-gray-500 py-4">© DREAMPLUS · 서울드림교회</div>
       </footer>
     </div>
   )
