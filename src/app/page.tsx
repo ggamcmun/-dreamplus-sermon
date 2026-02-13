@@ -34,11 +34,15 @@ async function getPublishedSermons(): Promise<SermonRow[]> {
     if (!Number.isNaN(ap)) return -1
     if (!Number.isNaN(bp)) return 1
 
-    const ad = new Date(a.date).getTime()
-    const bd = new Date(b.date).getTime()
-    if (ad !== bd) return bd - ad
+    const ad = a.date ? new Date(a.date).getTime() : NaN
+    const bd = b.date ? new Date(b.date).getTime() : NaN
+    if (!Number.isNaN(ad) && !Number.isNaN(bd) && ad !== bd) return bd - ad
+    if (!Number.isNaN(ad)) return -1
+    if (!Number.isNaN(bd)) return 1
 
-    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    const ac = a.created_at ? new Date(a.created_at).getTime() : 0
+    const bc = b.created_at ? new Date(b.created_at).getTime() : 0
+    return bc - ac
   })
 
   return rows
@@ -47,15 +51,17 @@ async function getPublishedSermons(): Promise<SermonRow[]> {
 export default async function HomePage() {
   const sermons = await getPublishedSermons()
 
+  // ✅ 교회 시리즈: 제목에 "교회#" 들어가면 묶기 (필요하면 기준 바꿔줄 수 있음)
+  const churchSeries = sermons.filter((s) => (s.title ?? '').includes('교회#'))
+  const normalSermons = sermons.filter((s) => !(s.title ?? '').includes('교회#'))
+
   return (
     <div className="min-h-screen flex flex-col bg-white text-black">
       {/* ===============================
           상단 헤더
       ================================ */}
       <header className="bg-black text-white text-center py-4 px-4">
-        <div className="text-3xl font-extrabold tracking-tight">
-          DREAMPLUS
-        </div>
+        <div className="text-3xl font-extrabold tracking-tight">DREAMPLUS</div>
 
         <div className="mt-2 text-sm opacity-90 leading-relaxed">
           🗓️ 매주 수요일 저녁 19:30<br />
@@ -65,9 +71,8 @@ export default async function HomePage() {
           </span>
         </div>
 
-        {/* ✅ SNS + 새신자 버튼 (높이 통일 + 새신자 폭 제한) */}
+        {/* ✅ SNS + 새신자 버튼 */}
         <div className="mt-3 flex items-center justify-center gap-3">
-          {/* 인스타 */}
           <a
             href="https://www.instagram.com/dreamplus._?igsh=OGRwcXo2ODVxb3Vu"
             target="_blank"
@@ -77,17 +82,10 @@ export default async function HomePage() {
             <img
               src="/insta.png"
               alt="Instagram"
-              className="
-                h-12 w-12
-                object-contain
-                opacity-90
-                hover:opacity-100
-                transition
-              "
+              className="h-12 w-12 object-contain opacity-90 hover:opacity-100 transition"
             />
           </a>
 
-          {/* 유튜브 */}
           <a
             href="https://youtube.com/channel/UCH5cB7IDzauotvZ9MVkEDlg?si=UvkQPYiV4likVmQX"
             target="_blank"
@@ -97,17 +95,10 @@ export default async function HomePage() {
             <img
               src="/youtube.png"
               alt="YouTube"
-              className="
-                h-12 w-12
-                object-contain
-                opacity-90
-                hover:opacity-100
-                transition
-              "
+              className="h-12 w-12 object-contain opacity-90 hover:opacity-100 transition"
             />
           </a>
 
-          {/* 새신자 등록 (높이는 동일, 대신 폭만 제한해서 과하게 커지지 않게) */}
           <a
             href="https://forms.gle/644BY2oLTyzRNSh6A"
             target="_blank"
@@ -117,51 +108,65 @@ export default async function HomePage() {
             <img
               src="/newcomer-banner.png"
               alt="새신자 등록"
-              className="
-                h-12
-                w-auto
-                max-w-[200px]
-                object-contain
-                hover:brightness-95
-                transition
-              "
+              className="h-12 w-auto max-w-[220px] object-contain hover:brightness-95 transition"
             />
           </a>
         </div>
       </header>
 
       {/* ===============================
-          안내 문구 + 설교 배너
+          안내 문구 + 설교 배너 + 시리즈
       ================================ */}
       <main className="max-w-2xl mx-auto w-full px-4 py-6 flex-1 space-y-5">
-        {sermons.length > 0 && (
+        {normalSermons.length > 0 && (
           <p className="text-center text-sm text-gray-600">
             👇 아래 이미지를 클릭하시면{' '}
-            <span className="font-medium text-black">
-              설교 노트로 들어갈 수 있습니다.
-            </span>
+            <span className="font-medium text-black">설교 노트로 들어갈 수 있습니다.</span>
           </p>
         )}
 
-        {sermons.length === 0 && (
-          <p className="text-center text-sm text-gray-500">
-            아직 공개된 설교가 없습니다.
-          </p>
+        {/* ✅ 일반 설교 배너 */}
+        {normalSermons.length === 0 ? (
+          <p className="text-center text-sm text-gray-500">아직 공개된 설교가 없습니다.</p>
+        ) : (
+          normalSermons.map((sermon) => (
+            <Link key={sermon.id} href={`/sermon/${sermon.slug}`} className="block group">
+              <img
+                src={sermon.banner_image?.trim() ? sermon.banner_image : '/home-banner.png'}
+                alt={sermon.title}
+                className="w-full h-auto transition-all duration-300 group-hover:brightness-90 group-hover:contrast-110"
+              />
+            </Link>
+          ))
         )}
 
-        {sermons.map((sermon) => (
-          <Link
-            key={sermon.id}
-            href={`/sermon/${sermon.slug}`}
-            className="block"
-          >
-            <img
-              src={sermon.banner_image || '/home-banner.png'}
-              alt={sermon.title}
-              className="w-full transition hover:brightness-95"
-            />
-          </Link>
-        ))}
+        {/* ✅ 교회 시리즈(이미지 버튼 클릭 → 3개 배너 펼침) */}
+        {churchSeries.length > 0 && (
+          <details className="rounded-xl border border-gray-200 bg-white overflow-hidden">
+            {/* 🔥 여기 summary를 이미지로 */}
+            <summary className="list-none cursor-pointer select-none">
+              <div className="px-0">
+                <img
+                  src="/church-series-button.png"
+                  alt="교회 시리즈 펼치기"
+                  className="w-full h-auto transition hover:brightness-95"
+                />
+              </div>
+            </summary>
+
+            <div className="px-0 pt-3 pb-1 space-y-4">
+              {churchSeries.map((s) => (
+                <Link key={s.id} href={`/sermon/${s.slug}`} className="block group">
+                  <img
+                    src={s.banner_image?.trim() ? s.banner_image : '/home-banner.png'}
+                    alt={s.title}
+                    className="w-full h-auto transition-all duration-300 group-hover:brightness-90 group-hover:contrast-110"
+                  />
+                </Link>
+              ))}
+            </div>
+          </details>
+        )}
       </main>
 
       {/* ===============================
