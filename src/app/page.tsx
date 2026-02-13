@@ -26,19 +26,19 @@ async function getPublishedSermons(): Promise<SermonRow[]> {
 
   const rows = (data ?? []) as SermonRow[]
 
-  // 정렬: 발행 → 날짜 → 생성
+  // ✅ 정렬 우선순위: published_at > date > created_at
   rows.sort((a, b) => {
     const ap = a.published_at ? new Date(a.published_at).getTime() : NaN
     const bp = b.published_at ? new Date(b.published_at).getTime() : NaN
     if (!Number.isNaN(ap) && !Number.isNaN(bp) && ap !== bp) return bp - ap
-    if (!Number.isNaN(ap)) return -1
-    if (!Number.isNaN(bp)) return 1
+    if (!Number.isNaN(ap) && Number.isNaN(bp)) return -1
+    if (Number.isNaN(ap) && !Number.isNaN(bp)) return 1
 
     const ad = a.date ? new Date(a.date).getTime() : NaN
     const bd = b.date ? new Date(b.date).getTime() : NaN
     if (!Number.isNaN(ad) && !Number.isNaN(bd) && ad !== bd) return bd - ad
-    if (!Number.isNaN(ad)) return -1
-    if (!Number.isNaN(bd)) return 1
+    if (!Number.isNaN(ad) && Number.isNaN(bd)) return -1
+    if (Number.isNaN(ad) && !Number.isNaN(bd)) return 1
 
     const ac = a.created_at ? new Date(a.created_at).getTime() : 0
     const bc = b.created_at ? new Date(b.created_at).getTime() : 0
@@ -48,12 +48,22 @@ async function getPublishedSermons(): Promise<SermonRow[]> {
   return rows
 }
 
+// ✅ "교회#2" 같은 번호를 제목에서 뽑아 정렬용으로 씀
+function getChurchSeriesNumber(title: string) {
+  const m = title.match(/교회\s*#\s*(\d+)/i)
+  return m ? Number(m[1]) : 9999
+}
+
 export default async function HomePage() {
   const sermons = await getPublishedSermons()
 
-  // ✅ 교회 시리즈: 제목에 "교회#" 들어가면 묶기 (필요하면 기준 바꿔줄 수 있음)
-  const churchSeries = sermons.filter((s) => (s.title ?? '').includes('교회#'))
-  const normalSermons = sermons.filter((s) => !(s.title ?? '').includes('교회#'))
+  // ✅ 교회 시리즈: 제목에 "교회#숫자"가 들어간 설교들만 묶기
+  const churchSeries = sermons
+    .filter((s) => /교회\s*#\s*\d+/i.test(s.title))
+    .sort((a, b) => getChurchSeriesNumber(a.title) - getChurchSeriesNumber(b.title))
+
+  // ✅ 나머지 설교들(교회 시리즈 제외)
+  const others = sermons.filter((s) => !/교회\s*#\s*\d+/i.test(s.title))
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-black">
@@ -108,65 +118,78 @@ export default async function HomePage() {
             <img
               src="/newcomer-banner.png"
               alt="새신자 등록"
-              className="h-12 w-auto max-w-[220px] object-contain hover:brightness-95 transition"
+              className="h-12 w-auto max-w-[200px] object-contain hover:brightness-95 transition"
             />
           </a>
         </div>
       </header>
 
       {/* ===============================
-          안내 문구 + 설교 배너 + 시리즈
+          안내 문구 + 콘텐츠
       ================================ */}
       <main className="max-w-2xl mx-auto w-full px-4 py-6 flex-1 space-y-5">
-        {normalSermons.length > 0 && (
+        {(churchSeries.length > 0 || others.length > 0) && (
           <p className="text-center text-sm text-gray-600">
             👇 아래 이미지를 클릭하시면{' '}
             <span className="font-medium text-black">설교 노트로 들어갈 수 있습니다.</span>
           </p>
         )}
 
-        {/* ✅ 일반 설교 배너 */}
-        {normalSermons.length === 0 ? (
+        {(churchSeries.length === 0 && others.length === 0) && (
           <p className="text-center text-sm text-gray-500">아직 공개된 설교가 없습니다.</p>
-        ) : (
-          normalSermons.map((sermon) => (
-            <Link key={sermon.id} href={`/sermon/${sermon.slug}`} className="block group">
-              <img
-                src={sermon.banner_image?.trim() ? sermon.banner_image : '/home-banner.png'}
-                alt={sermon.title}
-                className="w-full h-auto transition-all duration-300 group-hover:brightness-90 group-hover:contrast-110"
-              />
-            </Link>
-          ))
         )}
 
-        {/* ✅ 교회 시리즈(이미지 버튼 클릭 → 3개 배너 펼침) */}
+        {/* ===============================
+            ✅ 교회 시리즈 묶음 (버튼 1개 → 펼치면 3개)
+        ================================ */}
         {churchSeries.length > 0 && (
-          <details className="rounded-xl border border-gray-200 bg-white overflow-hidden">
-            {/* 🔥 여기 summary를 이미지로 */}
-            <summary className="list-none cursor-pointer select-none">
-              <div className="px-0">
+          <details className="border border-gray-200 rounded-xl p-3">
+            <summary className="cursor-pointer list-none">
+              <div className="group">
                 <img
-                  src="/church-series-button.png"
-                  alt="교회 시리즈 펼치기"
-                  className="w-full h-auto transition hover:brightness-95"
+                  src="/church-series.png"
+                  alt="교회 시리즈"
+                  className="w-full h-auto transition group-hover:brightness-95"
                 />
               </div>
             </summary>
 
-            <div className="px-0 pt-3 pb-1 space-y-4">
-              {churchSeries.map((s) => (
-                <Link key={s.id} href={`/sermon/${s.slug}`} className="block group">
-                  <img
-                    src={s.banner_image?.trim() ? s.banner_image : '/home-banner.png'}
-                    alt={s.title}
-                    className="w-full h-auto transition-all duration-300 group-hover:brightness-90 group-hover:contrast-110"
-                  />
-                </Link>
-              ))}
+            <div className="mt-3 space-y-4">
+              {churchSeries.map((sermon) => {
+                const bannerSrc =
+                  sermon.banner_image?.trim() ? sermon.banner_image : '/home-banner.png'
+
+                return (
+                  <Link key={sermon.id} href={`/sermon/${sermon.slug}`} className="block">
+                    <img
+                      src={bannerSrc}
+                      alt={sermon.title}
+                      className="w-full h-auto transition hover:brightness-95"
+                    />
+                  </Link>
+                )
+              })}
             </div>
           </details>
         )}
+
+        {/* ===============================
+            ✅ 나머지 설교들(최신순 그대로)
+        ================================ */}
+        {others.map((sermon) => {
+          const bannerSrc =
+            sermon.banner_image?.trim() ? sermon.banner_image : '/home-banner.png'
+
+          return (
+            <Link key={sermon.id} href={`/sermon/${sermon.slug}`} className="block">
+              <img
+                src={bannerSrc}
+                alt={sermon.title}
+                className="w-full h-auto transition hover:brightness-95"
+              />
+            </Link>
+          )
+        })}
       </main>
 
       {/* ===============================
